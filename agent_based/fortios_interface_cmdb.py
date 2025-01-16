@@ -27,7 +27,7 @@ import json
 from typing import List, Optional
 
 from cmk.base.plugins.agent_based.agent_based_api.v1 import register
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 
 class InterfaceCMDB(BaseModel):
@@ -76,6 +76,13 @@ class InterfaceCMDB(BaseModel):
     vrf: Optional[int]
     wccp: Optional[str]
     weight: Optional[int]
+
+    @field_validator('internal', mode='before')
+    @classmethod
+    def stringify(cls, value) -> str:
+        if value is not None:
+            return str(value)
+        return value
 
 
 def parse_fortios_interfaces_cmdb(string_table):

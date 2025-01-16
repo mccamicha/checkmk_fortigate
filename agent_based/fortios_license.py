@@ -73,7 +73,11 @@ class FortiGuardModule(ModuleInterface):
 
     @property
     def summary(self):
-        next_scheduled_update = render.timespan(self.next_scheduled_update - time.time())
+        ts = self.next_scheduled_update - time.time()
+        if ts < 0:
+            next_scheduled_update = "overdue" # Prevent crashes with testdata and negative timespan
+        else:
+            next_scheduled_update = render.timespan(ts)
         return f'Supported: {self.supported} WAN IP: {self.fortigate_wan_ip}, Scheduled Update: {self.scheduled_updates_enabled}, Next update: {next_scheduled_update}'
 
 class SupportDetail(BaseModel):
