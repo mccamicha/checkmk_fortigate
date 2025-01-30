@@ -77,7 +77,12 @@ def parse_fortios_managed_switch(string_table) -> Mapping[str, Switch] | None:
 
     if (forti_switches := json_data.get("results")) in ({}, []):
         return None
-
+        
+    for item in forti_switches:
+        # Latest firmware update renamed field?
+        if item.get("name") is None:
+            item["name"] = item["switch-id"]
+    
     return {item["name"]: Switch(**item) for item in forti_switches}
 
 
