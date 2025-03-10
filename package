@@ -82,6 +82,5 @@
     "title": "CheckMK FortiOS",
     "version": "1.0.0",
     "version.min_required": "2.2.0p1",
-    "version.usable_until": 2.3.0b1,
     "version.packaged": "2.2.0p31",
 }
