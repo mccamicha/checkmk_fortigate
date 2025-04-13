@@ -80,7 +80,7 @@
     },
     "name": "checkmk_fortios",
     "title": "CheckMK FortiOS",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "version.min_required": "2.2.0p1",
     "version.packaged": "2.2.0p31",
 }
