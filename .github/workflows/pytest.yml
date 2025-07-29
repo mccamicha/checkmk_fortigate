@@ -3,14 +3,17 @@ name: pytest
 on:
   push:
     paths:
-      - '**.py'
+      - '**/*.py'
+      
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
   pytest:
 
     runs-on: ubuntu-latest
     container:
-      image: checkmk/check-mk-raw:2.2.0-latest
+      image: checkmk/check-mk-raw:2.3.0-latest
 
     env:
       OMD_ROOT: /omd/sites/cmk

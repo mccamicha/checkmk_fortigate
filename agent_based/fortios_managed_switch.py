@@ -23,7 +23,7 @@ Check_MK agent based checks to be used with agent_fortios Datasource
 from __future__ import annotations
 
 import json
-from typing import Mapping
+from typing import Mapping, Optional
 
 from cmk.base.plugins.agent_based.agent_based_api.v1 import (
     Result,
@@ -32,7 +32,7 @@ from cmk.base.plugins.agent_based.agent_based_api.v1 import (
     register,
 )
 from cmk.base.plugins.agent_based.agent_based_api.v1.type_defs import CheckResult, DiscoveryResult
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel
 
 
 class Switch(BaseModel, frozen=True):
@@ -41,10 +41,10 @@ class Switch(BaseModel, frozen=True):
     serial: str
     state: str
     fgt_peer_intf_name: str
-    connecting_from: str
+    connecting_from: Optional[str]
     join_time: str
     type: str
-    is_l3: str
+    is_l3: bool
     max_poe_budget: int
     igmp_snooping_supported: bool
     dhcp_snooping_supported: bool
@@ -52,18 +52,10 @@ class Switch(BaseModel, frozen=True):
     led_blink_supported: bool
     os_version: str
 
-    @field_validator('is_l3', mode='before')
-    @classmethod
-    def stringify(cls, value) -> str:
-        if value is not None:
-            return str(value)
-        return value
-
-
     @property
     def summary(self) -> str:
         return f"Switch status: {self.status}, Connection state: {self.state}, Connection from: {self.connecting_from}"
-    
+
     @property
     def details(self) -> str:
         return f"Serial: {self.serial}\n, Interface: {self.fgt_peer_intf_name}\n, Join Time: {self.join_time}\n, Type: {self.type}\n, IS Layer3: {self.is_l3}\n, POE Budget: {self.max_poe_budget}"
@@ -77,12 +69,12 @@ def parse_fortios_managed_switch(string_table) -> Mapping[str, Switch] | None:
 
     if (forti_switches := json_data.get("results")) in ({}, []):
         return None
-        
+
     for item in forti_switches:
         # Latest firmware update renamed field?
         if item.get("name") is None:
             item["name"] = item["switch-id"]
-    
+
     return {item["name"]: Switch(**item) for item in forti_switches}
 
 
@@ -102,7 +94,7 @@ def check_fortios_managed_switch(item: str, section: Switch) -> CheckResult:
     if switch.status == "Connected":
         yield Result(state=State.OK, summary=switch.summary, details=switch.details)
     else:
-        yield Result(state=State.ERROR, summary=switch.summary, details=switch.defails)
+        yield Result(state=State.CRIT, summary=switch.summary, details=switch.details)
 
 
 register.check_plugin(

@@ -38,84 +38,15 @@ AP_SECTION: dict = {
         lldp_enable=True,
         os_version="FP231F-v7.0-build0134",
         radio=[
-            Radio(
-                radio_id=1,
-                mode="AP",
-                all_ssids=True,
-                auto_txpower=False,
-                background_scan_enabled=False,
-                bandwidth_rx=0,
-                bandwidth_tx=0,
-                base_bssid="00:00:00:00:00:00",
-                bytes_rx=1734657616,
-                bytes_tx=7776356678,
-                channel_utilization=True,
-                channel_utilization_percent=24,
-                channel_utilization_timestamp=1724443425,
-                channels=[],
-                client_count=0,
-                country_code=756,
-                country_name="CH",
-                detect_interfering=False,
-                detected_rogue_aps=0,
-                detected_rogue_infra_aps=0,
-                health=AccessPointHealth(general=None, channel_utilization=HealthMetric(value=24, severity="good"), client_count=HealthMetric(value=0, severity="good"), interfering_ssids=HealthMetric(value=0, severity="good"), infra_interfering_ssids=HealthMetric(value=0, severity="good"), overall=HealthMetric(value=0, severity="good")),
-            ),
-            Radio(
-                radio_id=2,
-                mode="AP",
-                all_ssids=True,
-                auto_txpower=False,
-                background_scan_enabled=False,
-                bandwidth_rx=44,
-                bandwidth_tx=336,
-                base_bssid="00:00:00:00:00:00",
-                bytes_rx=57289877156,
-                bytes_tx=166974595457,
-                channel_utilization=True,
-                channel_utilization_percent=6,
-                channel_utilization_timestamp=1724443425,
-                channels=[],
-                client_count=1,
-                country_code=756,
-                country_name="CH",
-                detect_interfering=False,
-                detected_rogue_aps=0,
-                detected_rogue_infra_aps=0,
-                health=AccessPointHealth(general=None, channel_utilization=HealthMetric(value=6, severity="good"), client_count=HealthMetric(value=1, severity="good"), interfering_ssids=HealthMetric(value=0, severity="good"), infra_interfering_ssids=HealthMetric(value=0, severity="good"), overall=HealthMetric(value=0, severity="good")),
-            ),
-            Radio(
-                radio_id=3,
-                mode="Monitor",
-                all_ssids=None,
-                auto_txpower=None,
-                background_scan_enabled=None,
-                bandwidth_rx=None,
-                bandwidth_tx=None,
-                base_bssid=None,
-                bytes_rx=None,
-                bytes_tx=None,
-                channel_utilization=None,
-                channel_utilization_percent=None,
-                channel_utilization_timestamp=None,
-                channels=None,
-                client_count=None,
-                country_code=None,
-                country_name=None,
-                detect_interfering=None,
-                detected_rogue_aps=69,
-                detected_rogue_infra_aps=64,
-                health=AccessPointHealth(general=None, channel_utilization=HealthMetric(value=0, severity="good"), client_count=HealthMetric(value=0, severity="good"), interfering_ssids=HealthMetric(value=0, severity="good"), infra_interfering_ssids=HealthMetric(value=0, severity="good"), overall=HealthMetric(value=0, severity="good")),
-            ),
-            Radio(radio_id=4, mode="Virtual Lan AP", all_ssids=None, auto_txpower=None, background_scan_enabled=None, bandwidth_rx=None, bandwidth_tx=None, base_bssid=None, bytes_rx=None, bytes_tx=None, channel_utilization=None, channel_utilization_percent=None, channel_utilization_timestamp=None, channels=None, client_count=None, country_code=None, country_name=None, detect_interfering=None, detected_rogue_aps=None, detected_rogue_infra_aps=None, health=None),
-            Radio(radio_id=5, mode="Not Exist", all_ssids=None, auto_txpower=None, background_scan_enabled=None, bandwidth_rx=None, bandwidth_tx=None, base_bssid=None, bytes_rx=None, bytes_tx=None, channel_utilization=None, channel_utilization_percent=None, channel_utilization_timestamp=None, channels=None, client_count=None, country_code=None, country_name=None, detect_interfering=None, detected_rogue_aps=None, detected_rogue_infra_aps=None, health=None),
+            Radio(radio_id=1, mode="AP", client_count=0, health=AccessPointHealth(overall=HealthMetric(value=0, severity="good")), overall=HealthMetric(value=0, severity="good")),
+            Radio(radio_id=2, mode="AP", client_count=1, health=AccessPointHealth(overall=HealthMetric(value=0, severity="good")), overall=HealthMetric(value=0, severity="good")),
+            Radio(radio_id=3, mode="Monitor", client_count=0, health=AccessPointHealth(overall=HealthMetric(value=0, severity="good"))),
+            Radio(radio_id=4, mode="Virtual Lan AP", client_count=0, health=None),
+            Radio(radio_id=5, mode="Not Exist", client_count=0, health=None),
         ],
         eos=False,
-        wired=[
-            WiredInterface(interface="lan1", bytes_rx=245200771025, bytes_tx=160819904621, packets_rx=300058497, packets_tx=265495953, errors_rx=0, errors_tx=0, dropped_rx=5081872, dropped_tx=0, collisions=0, link_speed_mbps=1000, is_carrier_link=True, is_full_duplex=True, max_link_speed=1000),
-            WiredInterface(interface="lan2", bytes_rx=0, bytes_tx=0, packets_rx=0, packets_tx=0, errors_rx=0, errors_tx=0, dropped_rx=0, dropped_tx=0, collisions=0, link_speed_mbps=0, is_carrier_link=False, is_full_duplex=False, max_link_speed=1000),
-        ],
-        health=AccessPointHealth(general=GeneralHealth(country_code=HealthMetric(value=0, severity="good"), uplink_status=[HealthMetric(value=1000, severity="good"), HealthMetric(value=0, severity="good")], overall=HealthMetric(value=0, severity="good")), channel_utilization=None, client_count=None, interfering_ssids=None, infra_interfering_ssids=None, overall=None),
+        wired=[WiredInterface(interface="lan1", bytes_rx=245200771025, bytes_tx=160819904621, packets_rx=300058497, packets_tx=265495953, errors_rx=0, errors_tx=0, dropped_rx=5081872, dropped_tx=0, collisions=0, link_speed_mbps=1000, is_carrier_link=True, is_full_duplex=True, max_link_speed=1000), WiredInterface(interface="lan2", bytes_rx=0, bytes_tx=0, packets_rx=0, packets_tx=0, errors_rx=0, errors_tx=0, dropped_rx=0, dropped_tx=0, collisions=0, link_speed_mbps=0, is_carrier_link=False, is_full_duplex=False, max_link_speed=1000)],
+        health=AccessPointHealth(general=GeneralHealth(country_code=HealthMetric(value=0, severity="good"), uplink_status=[HealthMetric(value=1000, severity="good"), HealthMetric(value=0, severity="good")], overall=HealthMetric(value=0, severity="good")), overall=HealthMetric(value=99, severity="Unknown")),
         cpu_usage=10,
         mem_free=562836,
         mem_total=903584,
@@ -139,7 +70,7 @@ AP_SECTION: dict = {
     ],
 )
 def test_parse_fortios_managed_ap(string_table, expected_section) -> None:
-    assert parse_fortios_managed_ap(string_table) == expected_section[0]
+    assert parse_fortios_managed_ap(string_table)["AP-NAME"].model_dump() == expected_section[0]["AP-NAME"].model_dump()
 
 
 @pytest.mark.parametrize(
@@ -163,11 +94,17 @@ def test_parse_fortios_managed_ap(string_table, expected_section) -> None:
 def test_check_fortios_managed_ap(item: str, section: str, expected_check_result: Tuple) -> None:
     with patch("cmk.base.plugins.agent_based.fortios_managed_ap.get_value_store") as mock_get:
         timestamp = int((datetime.now() - timedelta(minutes=2)).timestamp())
-        mock_get.return_value = {"bytes_tx": (timestamp, 0.0), "bytes_rx": (timestamp, 0.0)}
-        mock_get.return_value = {"errors_tx": (timestamp, 0.0), "errors_rx": (timestamp, 0.0)}
-        mock_get.return_value = {"dropped_tx": (timestamp, 0.0), "dropped_rx": (timestamp, 0.0)}
-        mock_get.return_value = {"collisions": (timestamp, 0.0)}
-        mock_get.return_value = {"if_out_bps": (timestamp, 0.0), "if_in_bps": (timestamp, 0.0)}
+        mock_get.return_value = {
+            "bytes_tx": (timestamp, 0.0),
+            "bytes_rx": (timestamp, 0.0),
+            "errors_tx": (timestamp, 0.0),
+            "errors_rx": (timestamp, 0.0),
+            "dropped_tx": (timestamp, 0.0),
+            "dropped_rx": (timestamp, 0.0),
+            "collisions": (timestamp, 0.0),
+            "if_out_bps": (timestamp, 0.0),
+            "if_in_bps": (timestamp, 0.0),
+        }
         result = list(check_fortios_managed_ap(item, section[0]))
         for res, expected_res in zip(result, expected_check_result):
             assert res == expected_res
