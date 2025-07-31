@@ -25,15 +25,17 @@ from __future__ import annotations
 import json
 from typing import Mapping, Optional
 
-from cmk.base.plugins.agent_based.agent_based_api.v1 import (
-    Attributes,
-    register,
-)
-from cmk.base.plugins.agent_based.agent_based_api.v1.type_defs import InventoryResult
 from pydantic import BaseModel, field_validator
 
+from cmk.agent_based.v2 import (
+    AgentSection,
+    Attributes,
+    InventoryPlugin,
+    InventoryResult,
+)
 
-class ModelInfo(BaseModel,protected_namespaces = ()):
+
+class ModelInfo(BaseModel, protected_namespaces=()):
     hostname: str
     model_name: str
     model: str
@@ -46,8 +48,7 @@ class DeviceInfo(BaseModel):
     build: int
     results: Optional[ModelInfo] = None
 
-
-    @field_validator('build', mode='before')
+    @field_validator("build", mode="before")
     @classmethod
     def stringify(cls, value) -> str:
         if value is not None:
@@ -70,7 +71,7 @@ def parse_fortios_device_info(string_table) -> Mapping[str, DeviceInfo] | None:
     return {device_info["hostname"]: DeviceInfo(**json_data)}
 
 
-register.agent_section(
+agent_section_fortios_device_info = AgentSection(
     name="fortios_device_info",
     parse_function=parse_fortios_device_info,
 )
@@ -94,12 +95,10 @@ def inventory_fortios_device_info(section: DeviceInfo) -> InventoryResult:
 
     path = ["software", "os"]
     for _k, v in section.items():
-        yield Attributes(
-            path=path, inventory_attributes={"version": v.version, "build": v.build}
-        )
+        yield Attributes(path=path, inventory_attributes={"version": v.version, "build": v.build})
 
 
-register.inventory_plugin(
+inventory_plugin_fortios_device_info = InventoryPlugin(
     name="fortios_device_info",
     inventory_function=inventory_fortios_device_info,
 )

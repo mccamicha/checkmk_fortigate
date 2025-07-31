@@ -25,14 +25,18 @@ from __future__ import annotations
 import json
 from typing import Mapping
 
-from cmk.base.plugins.agent_based.agent_based_api.v1 import (
+from pydantic import BaseModel
+
+from cmk.agent_based.v2 import (
+    AgentSection,
+    CheckPlugin,
+    CheckResult,
+    DiscoveryResult,
     Result,
     Service,
     State,
-    register,
+    StringTable,
 )
-from cmk.base.plugins.agent_based.agent_based_api.v1.type_defs import CheckResult, DiscoveryResult
-from pydantic import BaseModel
 
 
 class Peer(BaseModel):
@@ -48,7 +52,7 @@ class Peer(BaseModel):
         return f"Peer state: {self.state}, Local IP: {self.local_ip}, Remote AS: {self.remote_as}, Remote IP: {self.neighbor_ip}"
 
 
-def parse_fortios_bgp_peer(string_table) -> Mapping[str, Peer] | None:
+def parse_fortios_bgp_peer(string_table: StringTable) -> Mapping[str, Peer] | None:
     try:
         json_data = json.loads(string_table[0][0])
     except (ValueError, IndexError):
@@ -60,7 +64,7 @@ def parse_fortios_bgp_peer(string_table) -> Mapping[str, Peer] | None:
     return {item["neighbor_ip"]: Peer(**item) for item in bgp_peers}
 
 
-register.agent_section(
+agent_section_fortios_bgp_peer = AgentSection(
     name="fortios_bgp_peer",
     parse_function=parse_fortios_bgp_peer,
 )
@@ -82,7 +86,7 @@ def check_fortios_bgp_peer(item: str, section: Mapping[str, Peer]) -> CheckResul
     yield Result(state=State.OK if (bgp_peer.admin_status and bgp_peer.state == "Established") else State.CRIT, summary=bgp_peer.summary)
 
 
-register.check_plugin(
+check_plugin_fortios_bgp_peer = CheckPlugin(
     name="fortios_bgp_peer",
     service_name="BGP peer %s",
     discovery_function=discovery_fortios_bgp_peer,
