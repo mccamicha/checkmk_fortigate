@@ -13,7 +13,8 @@
 # Boston, MA 02110-1301 USA.
 
 import pytest
-from cmk.base.plugins.agent_based.fortios_interface_cmdb import (
+
+from cmk_addons.plugins.fortios.agent_based.fortios_interface_cmdb import (
     InterfaceCMDB,
     parse_fortios_interfaces_cmdb,
 )

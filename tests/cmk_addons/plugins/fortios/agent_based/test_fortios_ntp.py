@@ -18,12 +18,13 @@
 from typing import Mapping
 
 import pytest
-from cmk.base.plugins.agent_based.agent_based_api.v1 import (
+
+from cmk.agent_based.v2 import (
     Metric,
     Result,
     State,
 )
-from cmk.base.plugins.agent_based.fortios_ntp import (
+from cmk_addons.plugins.fortios.agent_based.fortios_ntp import (
     DEFAULT_OFFSET_LEVELS,
     FortiNTP,
     check_fortios_ntp,
@@ -67,7 +68,7 @@ def test_parse_fortios_ntp(string_table: list[list[str]] | list[list], expected_
             [
                 Result(state=State.OK, summary="Server: ch.pool.ntp.org, IP: 156.106.214.52, Selected: True"),
                 Result(state=State.OK, summary="Time offset: -1.1 ms"),
-                Metric('time_offset', -0.0010837003707885745, levels=(0.2, 0.5)),
+                Metric("time_offset", -0.0010837003707885745, levels=(0.2, 0.5)),
                 Result(state=State.OK, summary="Stratum: 2"),
             ],
         ),
@@ -76,7 +77,7 @@ def test_parse_fortios_ntp(string_table: list[list[str]] | list[list], expected_
             [
                 Result(state=State.OK, summary="Server: ch.pool.ntp.org, IP: 156.106.214.52, Selected: True"),
                 Result(state=State.WARN, summary="Time offset: 408.4 ms (warn/crit at 200.0 ms/500.0 ms)"),
-                Metric('time_offset', 0.40837003707885744, levels=(0.2, 0.5)),
+                Metric("time_offset", 0.40837003707885744, levels=(0.2, 0.5)),
                 Result(state=State.CRIT, summary="Stratum: 4 (warn/crit at 4/4)"),
             ],
         ),
@@ -85,7 +86,7 @@ def test_parse_fortios_ntp(string_table: list[list[str]] | list[list], expected_
             [
                 Result(state=State.OK, summary="Server: li.pool.ntp.org, IP: 185.34.151.142, Selected: True"),
                 Result(state=State.CRIT, summary="Time offset: -501.9 ms (warn/crit below -200.0 ms/-500.0 ms)"),
-                Metric('time_offset', -0.50192375834025, levels=(0.2, 0.5)),
+                Metric("time_offset", -0.50192375834025, levels=(0.2, 0.5)),
                 Result(state=State.CRIT, summary="Stratum: 5 (warn/crit at 4/4)"),
             ],
         ),

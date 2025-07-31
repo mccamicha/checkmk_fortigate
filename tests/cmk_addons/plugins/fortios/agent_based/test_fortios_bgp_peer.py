@@ -18,8 +18,9 @@
 from typing import Tuple
 
 import pytest
-from cmk.base.plugins.agent_based.agent_based_api.v1 import Result, State
-from cmk.base.plugins.agent_based.fortios_bgp_peer import (
+
+from cmk.agent_based.v2 import Result, State
+from cmk_addons.plugins.fortios.agent_based.fortios_bgp_peer import (
     Peer,
     check_fortios_bgp_peer,
     parse_fortios_bgp_peer,

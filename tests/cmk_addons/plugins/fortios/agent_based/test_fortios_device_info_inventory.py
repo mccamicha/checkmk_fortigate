@@ -16,9 +16,10 @@
 # Developer: opensource@wagner.ch
 
 import pytest
-from cmk.base.plugins.agent_based.fortios_device_info_inventory import (
-    ModelInfo,
+
+from cmk_addons.plugins.fortios.agent_based.fortios_device_info_inventory import (
     DeviceInfo,
+    ModelInfo,
     parse_fortios_device_info,
 )
 
@@ -27,11 +28,7 @@ from cmk.base.plugins.agent_based.fortios_device_info_inventory import (
     "string_table, expected_section",
     [
         (
-            [
-                [
-                    '{"action": "", "build": 9876, "http_method": "GET", "name": "status", "path": "system", "results": {"hostname": "Hostname01", "log_disk_status": "not_available", "model": "FGT60F", "model_name": "FortiGate", "model_number": "60F"}, "serial": "FGTSerialNumber", "status": "success", "vdom": "root", "version": "v7.x.y"}'
-                ]
-            ],
+            [['{"action": "", "build": 9876, "http_method": "GET", "name": "status", "path": "system", "results": {"hostname": "Hostname01", "log_disk_status": "not_available", "model": "FGT60F", "model_name": "FortiGate", "model_number": "60F"}, "serial": "FGTSerialNumber", "status": "success", "vdom": "root", "version": "v7.x.y"}']],
             [
                 {
                     "Hostname01": DeviceInfo(

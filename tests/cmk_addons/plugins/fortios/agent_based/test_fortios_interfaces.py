@@ -20,17 +20,18 @@ from typing import Tuple
 from unittest.mock import patch
 
 import pytest
-from cmk.base.plugins.agent_based.agent_based_api.v1 import (
+
+from cmk.agent_based.v2 import (
     Metric,
     Result,
     State,
 )
-from cmk.base.plugins.agent_based.fortios_interface import (
+from cmk_addons.plugins.fortios.agent_based.fortios_interface import (
     Interface,
     check_fortios_interfaces,
     parse_fortios_interfaces,
 )
-from cmk.base.plugins.agent_based.fortios_interface_cmdb import InterfaceCMDB
+from cmk_addons.plugins.fortios.agent_based.fortios_interface_cmdb import InterfaceCMDB
 
 
 @pytest.mark.parametrize(
@@ -118,7 +119,7 @@ def test_parse_fortios_interfaces(string_table, expected_section) -> None:
     ],
 )
 def test_check_fortios_interfaces(item: str, section_fortios_interfaces, section_fortios_interfaces_cmdb, expected_check_result: Tuple) -> None:
-    with patch("cmk.base.plugins.agent_based.fortios_interface.get_value_store") as mock_get:
+    with patch("cmk_addons.plugins.fortios.agent_based.fortios_interface.get_value_store") as mock_get:
         timestamp = int((datetime.now() - timedelta(minutes=2)).timestamp())
         mock_get.return_value = {"rx_packets": (timestamp, 0.0), "tx_packets": (timestamp, 0.0)}
         mock_get.return_value = {"if_in_bps": (timestamp, 0.0), "if_out_bps": (timestamp, 0.0)}

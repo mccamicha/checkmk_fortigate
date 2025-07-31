@@ -16,29 +16,36 @@
 # Developer: opensource@wagner.ch
 
 import pytest
-from cmk.base.plugins.agent_based.agent_based_api.v1 import (
+
+from cmk.agent_based.v2 import (
     Metric,
     Result,
     State,
 )
-from cmk.base.plugins.agent_based.fortios_managed_switch_health import CPU, POE, FortiosSwitchData, Memory, PerformanceStatus, TimeUnit, Uptime
-from cmk.base.plugins.agent_based.fortios_managed_switch_poe import check_fortios_switch_poe
+from cmk_addons.plugins.fortios.agent_based.fortios_managed_switch_cpu import check_fortios_switch_cpu
+from cmk_addons.plugins.fortios.agent_based.fortios_managed_switch_health import (
+    CPU,
+    POE,
+    FortiosSwitchData,
+    Memory,
+    PerformanceStatus,
+    TimeUnit,
+    Uptime,
+)
 
 PerformanceStatus.model_rebuild()
 
 
+# Test data for check_fortios_switch_cpu
 @pytest.mark.parametrize(
-    "section, expected_check_result",
+    "section, expected_results",
     [
         (
             (FortiosSwitchData(performance_status=PerformanceStatus(cpu=CPU(idle=TimeUnit(unit="%", value=87), nice=TimeUnit(unit="%", value=0), system=TimeUnit(unit="%", value=12), user=TimeUnit(unit="%", value=1)), memory=Memory(used=TimeUnit(unit="%", value=36)), uptime=Uptime(days=TimeUnit(unit="days", value=113), hours=TimeUnit(unit="hours", value=5), minutes=TimeUnit(unit="minutes", value=16))), poe=POE(max_value=800, unit="watts", value=26.1))),
-            [
-                Result(state=State.OK, summary="POE usage (26.10W/800.00W) 3.26%"),
-                Metric("poe_power", 26.1, boundaries=(0, 800)),
-            ],
+            (Result(state=State.OK, summary="Total CPU: 13%, nice: 0%, system: 12%, user: 1%"), Metric("util_average_1", 13, boundaries=(0, 100)), Metric("idle", 87), Metric("user", 1), Metric("system", 12)),
         ),
     ],
 )
-def test_check_fortios_managed_switch_poe(section: FortiosSwitchData, expected_check_result) -> None:
-    actual_check_result = list(check_fortios_switch_poe(section))
-    assert actual_check_result == expected_check_result
+def test_check_managed_fortios_switch_cpu(section: FortiosSwitchData, expected_results: list) -> None:
+    check_results = tuple(check_fortios_switch_cpu(section))
+    assert check_results == expected_results

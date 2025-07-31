@@ -16,7 +16,8 @@
 # Developer: opensource@wagner.ch
 
 import pytest
-from cmk.base.plugins.agent_based.fortios_managed_switch_health import (
+
+from cmk_addons.plugins.fortios.agent_based.fortios_managed_switch_health import (
     FortiosSwitchData,
     parse_fortios_managed_switch_health,
     replace_hyphens,

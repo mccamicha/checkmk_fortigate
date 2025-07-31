@@ -16,16 +16,17 @@
 # Developer: opensource@wagner.ch
 
 import pytest
-from cmk.base.plugins.agent_based.agent_based_api.v1 import (
+
+from cmk.agent_based.v2 import (
     Metric,
     Result,
     State,
 )
-from cmk.base.plugins.agent_based.fortios_dhcp_lease import (
+from cmk_addons.plugins.fortios.agent_based.fortios_dhcp_lease import (
     DhcpLease,
     parse_fortios_dhcp_lease,
 )
-from cmk.base.plugins.agent_based.fortios_dhcp_scope import (
+from cmk_addons.plugins.fortios.agent_based.fortios_dhcp_scope import (
     DEFAULT_DHCP_LEVELS,
     DhcpServer,
     IpRange,
@@ -74,15 +75,7 @@ from cmk.base.plugins.agent_based.fortios_dhcp_scope import (
                         next_server="0.0.0.0",
                         netmask="255.255.255.0",
                         interface="fortilink",
-                        ip_range=[IpRange(id=1,
-                        q_origin_key=1,
-                        start_ip="10.128.1.100",
-                        end_ip="10.128.1.254",
-                        vci_match="disable",
-                        vci_string=[],
-                        uci_match="disable",
-                        uci_string=[],
-                        lease_time=0)],
+                        ip_range=[IpRange(id=1, q_origin_key=1, start_ip="10.128.1.100", end_ip="10.128.1.254", vci_match="disable", vci_string=[], uci_match="disable", uci_string=[], lease_time=0)],
                         timezone_option="disable",
                         timezone="00",
                         tftp_server=[],
@@ -104,57 +97,12 @@ from cmk.base.plugins.agent_based.fortios_dhcp_scope import (
                         ddns_key="ENC -1YkQCs+hHEqoYnXU1gvefH2QCrBw=",
                         ddns_ttl=300,
                         vci_match="enable",
-                        vci_string=[
-                            VciString(
-                                vci_string="FortiSwitch",
-                                q_origin_key="FortiSwitch"
-                            ),
-                            VciString(
-                                vci_string="FortiExtender",
-                                q_origin_key="FortiExtender"
-                            )
-                        ],
+                        vci_string=[VciString(vci_string="FortiSwitch", q_origin_key="FortiSwitch"), VciString(vci_string="FortiExtender", q_origin_key="FortiExtender")],
                         exclude_range=[],
                         reserved_address=[
-                            ReservedAddress(
-                                id=1,
-                                q_origin_key=1,
-                                type="mac",
-                                ip="10.128.1.100",
-                                mac="aa:aa:bb:bb:cc:cc",
-                                action="reserved",
-                                circuit_id_type="string",
-                                circuit_id="",
-                                remote_id_type="string",
-                                remote_id="",
-                                description=""
-                            ),
-                            ReservedAddress(
-                                id=2,
-                                q_origin_key=2,
-                                type="mac",
-                                ip="10.128.1.101",
-                                mac="aa:aa:bb:bb:dd:dd",
-                                action="reserved",
-                                circuit_id_type="string",
-                                circuit_id="",
-                                remote_id_type="string",
-                                remote_id="",
-                                description=""
-                            ),
-                            ReservedAddress(
-                                id=3,
-                                q_origin_key=3,
-                                type="mac",
-                                ip="10.128.1.102",
-                                mac="aa:aa:bb:bb:ee:ee",
-                                action="reserved",
-                                circuit_id_type="string",
-                                circuit_id="",
-                                remote_id_type="string",
-                                remote_id="",
-                                description=""
-                            ),
+                            ReservedAddress(id=1, q_origin_key=1, type="mac", ip="10.128.1.100", mac="aa:aa:bb:bb:cc:cc", action="reserved", circuit_id_type="string", circuit_id="", remote_id_type="string", remote_id="", description=""),
+                            ReservedAddress(id=2, q_origin_key=2, type="mac", ip="10.128.1.101", mac="aa:aa:bb:bb:dd:dd", action="reserved", circuit_id_type="string", circuit_id="", remote_id_type="string", remote_id="", description=""),
+                            ReservedAddress(id=3, q_origin_key=3, type="mac", ip="10.128.1.102", mac="aa:aa:bb:bb:ee:ee", action="reserved", circuit_id_type="string", circuit_id="", remote_id_type="string", remote_id="", description=""),
                         ],
                     ),
                 }
@@ -164,6 +112,7 @@ from cmk.base.plugins.agent_based.fortios_dhcp_scope import (
 )
 def test_parse_fortios_dhcp_scope(string_table, expected_section) -> None:
     assert parse_fortios_dhcp_scope(string_table) == expected_section[0]
+
 
 @pytest.mark.parametrize(
     "string_table, expected_section",
@@ -176,53 +125,17 @@ def test_parse_fortios_dhcp_scope(string_table, expected_section) -> None:
             ],
             [
                 {
-                    "aa:aa:bb:bb:cc:cc": DhcpLease(
-                        ip="10.128.1.110",
-                        reserved=True,
-                        mac="aa:aa:bb:bb:cc:cc",
-                        vci="FortiSwitch-424E-FPOE",
-                        hostname="switch01",
-                        expire_time=1724645153,
-                        status="leased",
-                        interface="fortilink",
-                        type="ipv4",
-                        server_mkey=3,
-                        server_ipam_enabled=False
-                    ),
-                    "aa:aa:bb:bb:dd:dd": DhcpLease(
-                        ip="10.128.1.111",
-                        reserved=True,
-                        mac="aa:aa:bb:bb:dd:dd",
-                        vci="FortiSwitch-424E-FPOE",
-                        hostname="switch02",
-                        expire_time=1724645151,
-                        status="leased",
-                        interface="fortilink",
-                        type="ipv4",
-                        server_mkey=3,
-                        server_ipam_enabled=False
-                    ),
-                    "aa:aa:bb:bb:ee:ee": DhcpLease(
-                        ip="10.128.1.112",
-                        reserved=True,
-                        mac="aa:aa:bb:bb:ee:ee",
-                        vci="FortiSwitch-448E-FPOE",
-                        hostname="switch03",
-                        expire_time=1724645152,
-                        status="leased",
-                        interface="fortilink",
-                        type="ipv4",
-                        server_mkey=3,
-                        server_ipam_enabled=False
-                    ),
+                    "aa:aa:bb:bb:cc:cc": DhcpLease(ip="10.128.1.110", reserved=True, mac="aa:aa:bb:bb:cc:cc", vci="FortiSwitch-424E-FPOE", hostname="switch01", expire_time=1724645153, status="leased", interface="fortilink", type="ipv4", server_mkey=3, server_ipam_enabled=False),
+                    "aa:aa:bb:bb:dd:dd": DhcpLease(ip="10.128.1.111", reserved=True, mac="aa:aa:bb:bb:dd:dd", vci="FortiSwitch-424E-FPOE", hostname="switch02", expire_time=1724645151, status="leased", interface="fortilink", type="ipv4", server_mkey=3, server_ipam_enabled=False),
+                    "aa:aa:bb:bb:ee:ee": DhcpLease(ip="10.128.1.112", reserved=True, mac="aa:aa:bb:bb:ee:ee", vci="FortiSwitch-448E-FPOE", hostname="switch03", expire_time=1724645152, status="leased", interface="fortilink", type="ipv4", server_mkey=3, server_ipam_enabled=False),
                 },
             ],
         ),
     ],
 )
-
 def test_parse_fortios_dhcp_lease(string_table, expected_section) -> None:
     assert parse_fortios_dhcp_lease(string_table) == expected_section[0]
+
 
 @pytest.mark.parametrize(
     "item, section_fortios_dhcp_scope, section_fortios_dhcp_lease, expected_check_result",
@@ -258,17 +171,7 @@ def test_parse_fortios_dhcp_lease(string_table, expected_section) -> None:
                     netmask="255.255.255.0",
                     interface="fortilink",
                     ip_range=[
-                        IpRange(
-                            id=1,
-                            q_origin_key=1,
-                            start_ip="10.128.1.100",
-                            end_ip="10.128.1.254",
-                            vci_match="disable",
-                            vci_string=[],
-                            uci_match="disable",
-                            uci_string=[],
-                            lease_time=0
-                        ),
+                        IpRange(id=1, q_origin_key=1, start_ip="10.128.1.100", end_ip="10.128.1.254", vci_match="disable", vci_string=[], uci_match="disable", uci_string=[], lease_time=0),
                     ],
                     timezone_option="disable",
                     timezone="00",
@@ -292,99 +195,21 @@ def test_parse_fortios_dhcp_lease(string_table, expected_section) -> None:
                     ddns_ttl=300,
                     vci_match="enable",
                     vci_string=[
-                        VciString(
-                            vci_string="FortiSwitch",
-                            q_origin_key="FortiSwitch"
-                        ),
-                        VciString(
-                            vci_string="FortiExtender",
-                            q_origin_key="FortiExtender"
-                        ),
+                        VciString(vci_string="FortiSwitch", q_origin_key="FortiSwitch"),
+                        VciString(vci_string="FortiExtender", q_origin_key="FortiExtender"),
                     ],
                     exclude_range=[],
                     reserved_address=[
-                        ReservedAddress(
-                            id=1,
-                            q_origin_key=1,
-                            type="mac",
-                            ip="10.128.1.100",
-                            mac="aa:aa:bb:bb:cc:cc",
-                            action="reserved",
-                            circuit_id_type="string",
-                            circuit_id="",
-                            remote_id_type="string",
-                            remote_id="",
-                            description=""
-                        ),
-                        ReservedAddress(
-                            id=2,
-                            q_origin_key=2,
-                            type="mac",
-                            ip="10.128.1.101",
-                            mac="aa:aa:bb:bb:dd:dd",
-                            action="reserved",
-                            circuit_id_type="string",
-                            circuit_id="",
-                            remote_id_type="string",
-                            remote_id="",
-                            description=""
-                        ),
-                        ReservedAddress(
-                            id=3,
-                            q_origin_key=3,
-                            type="mac",
-                            ip="10.128.1.102",
-                            mac="aa:aa:bb:bb:ee:ee",
-                            action="reserved",
-                            circuit_id_type="string",
-                            circuit_id="",
-                            remote_id_type="string",
-                            remote_id="",
-                            description=""
-                        ),
+                        ReservedAddress(id=1, q_origin_key=1, type="mac", ip="10.128.1.100", mac="aa:aa:bb:bb:cc:cc", action="reserved", circuit_id_type="string", circuit_id="", remote_id_type="string", remote_id="", description=""),
+                        ReservedAddress(id=2, q_origin_key=2, type="mac", ip="10.128.1.101", mac="aa:aa:bb:bb:dd:dd", action="reserved", circuit_id_type="string", circuit_id="", remote_id_type="string", remote_id="", description=""),
+                        ReservedAddress(id=3, q_origin_key=3, type="mac", ip="10.128.1.102", mac="aa:aa:bb:bb:ee:ee", action="reserved", circuit_id_type="string", circuit_id="", remote_id_type="string", remote_id="", description=""),
                     ],
                 ),
             },
             {
-                "aa:aa:bb:bb:cc:cc": DhcpLease(
-                    ip="10.128.1.110",
-                    reserved=True,
-                    mac="aa:aa:bb:bb:cc:cc",
-                    vci="FortiSwitch-424E-FPOE",
-                    hostname="switch01",
-                    expire_time=1724645153,
-                    status="leased",
-                    interface="fortilink",
-                    type="ipv4",
-                    server_mkey=3,
-                    server_ipam_enabled=False
-                ),
-                "aa:aa:bb:bb:dd:dd": DhcpLease(
-                    ip="10.128.1.111",
-                    reserved=True,
-                    mac="aa:aa:bb:bb:dd:dd",
-                    vci="FortiSwitch-424E-FPOE",
-                    hostname="switch02",
-                    expire_time=1724645151,
-                    status="leased",
-                    interface="fortilink",
-                    type="ipv4",
-                    server_mkey=3,
-                    server_ipam_enabled=False
-                ),
-                "aa:aa:bb:bb:ee:ee": DhcpLease(
-                    ip="10.128.1.112",
-                    reserved=True,
-                    mac="aa:aa:bb:bb:ee:ee",
-                    vci="FortiSwitch-448E-FPOE",
-                    hostname="switch03",
-                    expire_time=1724645152,
-                    status="leased",
-                    interface="fortilink",
-                    type="ipv4",
-                    server_mkey=3,
-                    server_ipam_enabled=False
-                ),
+                "aa:aa:bb:bb:cc:cc": DhcpLease(ip="10.128.1.110", reserved=True, mac="aa:aa:bb:bb:cc:cc", vci="FortiSwitch-424E-FPOE", hostname="switch01", expire_time=1724645153, status="leased", interface="fortilink", type="ipv4", server_mkey=3, server_ipam_enabled=False),
+                "aa:aa:bb:bb:dd:dd": DhcpLease(ip="10.128.1.111", reserved=True, mac="aa:aa:bb:bb:dd:dd", vci="FortiSwitch-424E-FPOE", hostname="switch02", expire_time=1724645151, status="leased", interface="fortilink", type="ipv4", server_mkey=3, server_ipam_enabled=False),
+                "aa:aa:bb:bb:ee:ee": DhcpLease(ip="10.128.1.112", reserved=True, mac="aa:aa:bb:bb:ee:ee", vci="FortiSwitch-448E-FPOE", hostname="switch03", expire_time=1724645152, status="leased", interface="fortilink", type="ipv4", server_mkey=3, server_ipam_enabled=False),
             },
             [
                 Metric("scope_usage", 3.0, boundaries=(0.0, 155.0)),
@@ -394,7 +219,6 @@ def test_parse_fortios_dhcp_lease(string_table, expected_section) -> None:
         ),
     ],
 )
-
 def test_check_fortios_dhcp_scope(item: str, section_fortios_dhcp_scope: DhcpServer, section_fortios_dhcp_lease: DhcpLease, expected_check_result) -> None:
     actual_check_result = list(check_fortios_dhcp_scope(item, DEFAULT_DHCP_LEVELS, section_fortios_dhcp_scope, section_fortios_dhcp_lease))
     assert actual_check_result == expected_check_result

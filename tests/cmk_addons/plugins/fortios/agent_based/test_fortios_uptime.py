@@ -17,37 +17,33 @@
 
 import time
 from typing import Tuple
+from unittest.mock import patch
 
 import pytest
-from cmk.base.plugins.agent_based.agent_based_api.v1 import (
+from freezegun import freeze_time
+
+from cmk.agent_based.v2 import (
     Metric,
     Result,
     State,
 )
-from cmk.base.plugins.agent_based.fortios_uptime import (
+from cmk_addons.plugins.fortios.agent_based.fortios_uptime import (
     Uptime,
     check_fortios_uptime,
     parse_fortios_uptime,
 )
-from freezegun import freeze_time
-from unittest.mock import patch
 
 
-@patch("cmk.base.plugins.agent_based.fortios_uptime.time.time", return_value=1720183649)
+@patch("cmk_addons.plugins.fortios.agent_based.fortios_uptime.time.time", return_value=1720183649)
 def test_parse_fortios_uptime(mock_time) -> None:
-    string_table = [[
-        '{"http_method":"GET", "results": {'
-        '"snapshot_utc_time":1712050417000, '
-        '"utc_last_reboot":1687436424000, '
-        '"time_zone_offset":-120}, '
-        '"serial":"Serial01", "hostname": "ffw01"}'
-    ]]
+    string_table = [['{"http_method":"GET", "results": {"snapshot_utc_time":1712050417000, "utc_last_reboot":1687436424000, "time_zone_offset":-120}, "serial":"Serial01", "hostname": "ffw01"}']]
 
     parsed = parse_fortios_uptime(string_table)
 
     assert parsed.utc_last_reboot == 1687436424
     assert parsed.snapshot_utc_time == 1712050417
     assert parsed.uptime == 1720183649 - 1687436424  # = 66352525
+
 
 @freeze_time("2024-07-05 15:27:29")
 @pytest.mark.parametrize(

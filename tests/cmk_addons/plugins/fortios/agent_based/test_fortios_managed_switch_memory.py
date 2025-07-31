@@ -16,13 +16,22 @@
 # Developer: opensource@wagner.ch
 
 import pytest
-from cmk.base.plugins.agent_based.agent_based_api.v1 import (
+
+from cmk.agent_based.v2 import (
     Metric,
     Result,
     State,
 )
-from cmk.base.plugins.agent_based.fortios_managed_switch_health import CPU, POE, FortiosSwitchData, Memory, PerformanceStatus, TimeUnit, Uptime
-from cmk.base.plugins.agent_based.fortios_managed_switch_memory import check_fortios_switch_memory
+from cmk_addons.plugins.fortios.agent_based.fortios_managed_switch_health import (
+    CPU,
+    POE,
+    FortiosSwitchData,
+    Memory,
+    PerformanceStatus,
+    TimeUnit,
+    Uptime,
+)
+from cmk_addons.plugins.fortios.agent_based.fortios_managed_switch_memory import check_fortios_switch_memory
 
 PerformanceStatus.model_rebuild()
 

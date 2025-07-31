@@ -16,7 +16,14 @@
 # Developer: opensource@wagner.ch
 
 import pytest
-from cmk.base.plugins.agent_based.fortios_resources import FortiResource, Resource, ResourceResult, Session, parse_fortios_resources
+
+from cmk_addons.plugins.fortios.agent_based.fortios_resources import (
+    FortiResource,
+    Resource,
+    ResourceResult,
+    Session,
+    parse_fortios_resources,
+)
 
 
 @pytest.mark.parametrize(

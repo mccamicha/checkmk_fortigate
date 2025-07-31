@@ -20,12 +20,13 @@ from typing import Dict, Tuple
 from unittest.mock import patch
 
 import pytest
-from cmk.base.plugins.agent_based.agent_based_api.v1 import (
+
+from cmk.agent_based.v2 import (
     Metric,
     Result,
     State,
 )
-from cmk.base.plugins.agent_based.fortios_managed_switch_interface import (
+from cmk_addons.plugins.fortios.agent_based.fortios_managed_switch_interface import (
     IgmpSnoopingGroup,
     PhysicalPort,
     check_fortios_switch_interface,
@@ -528,12 +529,8 @@ def test_parse_fortios_managed_switch_interface(string_table, expected_section) 
         ),
     ],
 )
-def test_check_fortios_managed_switch_interface(
-    item: str, section: str, expected_check_result: Tuple
-) -> None:
-    with patch(
-        "cmk.base.plugins.agent_based.fortios_managed_switch_interface.get_value_store"
-    ) as mock_get:
+def test_check_fortios_managed_switch_interface(item: str, section: str, expected_check_result: Tuple) -> None:
+    with patch("cmk_addons.plugins.fortios.agent_based.fortios_managed_switch_interface.get_value_store") as mock_get:
         timestamp = int((datetime.now() - timedelta(minutes=2)).timestamp())
         mock_get.return_value = {"rx_bytes": (timestamp, 0), "tx_bytes": (timestamp, 0)}
         result = list(check_fortios_switch_interface(item, section))

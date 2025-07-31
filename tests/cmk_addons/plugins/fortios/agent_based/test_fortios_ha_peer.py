@@ -18,8 +18,9 @@
 from typing import Tuple
 
 import pytest
-from cmk.base.plugins.agent_based.agent_based_api.v1 import Result, State
-from cmk.base.plugins.agent_based.fortios_ha_peer import (
+
+from cmk.agent_based.v2 import Result, State
+from cmk_addons.plugins.fortios.agent_based.fortios_ha_peer import (
     Peer,
     check_fortios_ha_peer,
     parse_fortios_ha_peer,

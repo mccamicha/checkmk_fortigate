@@ -16,7 +16,8 @@
 # Developer: opensource@wagner.ch
 
 import pytest
-from cmk.base.plugins.agent_based.fortios_managed_switch import Switch, parse_fortios_managed_switch
+
+from cmk_addons.plugins.fortios.agent_based.fortios_managed_switch import Switch, parse_fortios_managed_switch
 
 
 @pytest.mark.parametrize(

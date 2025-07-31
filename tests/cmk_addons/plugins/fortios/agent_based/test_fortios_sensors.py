@@ -16,12 +16,13 @@
 # Developer: opensource@wagner.ch
 
 import pytest
-from cmk.base.plugins.agent_based.agent_based_api.v1 import (
+
+from cmk.agent_based.v2 import (
     Metric,
     Result,
     State,
 )
-from cmk.base.plugins.agent_based.fortios_sensors import (
+from cmk_addons.plugins.fortios.agent_based.fortios_sensors import (
     Sensor,
     Thresholds,
     check_fortios_sensors,

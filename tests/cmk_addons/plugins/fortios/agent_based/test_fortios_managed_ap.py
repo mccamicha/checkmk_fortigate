@@ -20,8 +20,20 @@ from typing import Tuple
 from unittest.mock import patch
 
 import pytest
-from cmk.base.plugins.agent_based.agent_based_api.v1 import Result, State
-from cmk.base.plugins.agent_based.fortios_managed_ap import LLDP, AccessPoint, AccessPointHealth, GeneralHealth, HealthMetric, Radio, SSIDRadio, WiredInterface, check_fortios_managed_ap, parse_fortios_managed_ap
+
+from cmk.agent_based.v2 import Result, State
+from cmk_addons.plugins.fortios.agent_based.fortios_managed_ap import (
+    LLDP,
+    AccessPoint,
+    AccessPointHealth,
+    GeneralHealth,
+    HealthMetric,
+    Radio,
+    SSIDRadio,
+    WiredInterface,
+    check_fortios_managed_ap,
+    parse_fortios_managed_ap,
+)
 
 AP_SECTION: dict = {
     "AP-NAME": AccessPoint(
@@ -92,7 +104,7 @@ def test_parse_fortios_managed_ap(string_table, expected_section) -> None:
     ],
 )
 def test_check_fortios_managed_ap(item: str, section: str, expected_check_result: Tuple) -> None:
-    with patch("cmk.base.plugins.agent_based.fortios_managed_ap.get_value_store") as mock_get:
+    with patch("cmk_addons.plugins.fortios.agent_based.fortios_managed_ap.get_value_store") as mock_get:
         timestamp = int((datetime.now() - timedelta(minutes=2)).timestamp())
         mock_get.return_value = {
             "bytes_tx": (timestamp, 0.0),

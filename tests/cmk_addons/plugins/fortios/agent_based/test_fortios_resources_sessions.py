@@ -18,17 +18,18 @@
 from typing import Dict
 
 import pytest
-from cmk.base.plugins.agent_based.agent_based_api.v1 import (
+
+from cmk.agent_based.v2 import (
     Metric,
     Result,
     State,
 )
-from cmk.base.plugins.agent_based.fortios_resources import FortiResource, Resource, ResourceResult, Session
-from cmk.base.plugins.agent_based.fortios_resources_sessions import (
+from cmk_addons.plugins.fortios.agent_based.fortios_resources import FortiResource, Resource, ResourceResult, Session
+from cmk_addons.plugins.fortios.agent_based.fortios_resources_sessions import (
     check_fortios_resources_sessions,
 )
 
-DEFAULT_SESSION_LEVELS: Dict = {"session_levels": (5000, 10000)}
+DEFAULT_SESSION_LEVELS: Dict = {"session_levels": ("fixed", (5000, 10000))}
 
 
 @pytest.mark.parametrize(
