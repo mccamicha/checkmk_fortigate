@@ -24,13 +24,12 @@ from __future__ import annotations
 
 from typing import Any, Dict, Mapping
 
+from cmk.agent_based.v2 import CheckPlugin, CheckResult, DiscoveryResult, Metric, Result, Service, State, check_levels
 from cmk.agent_based.v2.render import percent
 
 from .fortios_resources import FortiResource
 
-from cmk.agent_based.v2 import CheckPlugin, CheckResult, DiscoveryResult, Metric, Result, Service, State, check_levels
-
-DEFAULT_MEMORY_LEVELS: Dict = {"levels": (70.0, 80.0)}
+DEFAULT_MEMORY_LEVELS: Dict = {"levels": ("fixed", (70.0, 80.0))}
 
 
 def discovery_fortios_resources_memory(section: FortiResource) -> DiscoveryResult:
@@ -41,7 +40,8 @@ def check_fortios_resources_memory(params: Mapping[str, Any], section: FortiReso
     memory_levels = params.get("memory_levels")
 
     yield Result(state=State.OK, summary="Total usage")
-    yield Metric("memory_util", section.total_memory, levels=memory_levels, boundaries=(0, 100))
+
+    yield Metric("memory_util", section.total_memory, levels=memory_levels[1], boundaries=(0, 100))
 
     yield from check_levels(
         value=section.total_memory,

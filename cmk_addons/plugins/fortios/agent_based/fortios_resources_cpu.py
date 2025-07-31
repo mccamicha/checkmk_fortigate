@@ -24,15 +24,14 @@ from __future__ import annotations
 
 from typing import Any, Dict, Mapping
 
+from cmk.agent_based.v2 import CheckPlugin, CheckResult, DiscoveryResult, Metric, Result, Service, State, check_levels
 from cmk.agent_based.v2.render import (
     percent,
 )
 
 from .fortios_resources import FortiResource
 
-from cmk.agent_based.v2 import CheckPlugin, Metric, Result, Service, State, CheckResult, DiscoveryResult, check_levels
-
-DEFAULT_CPU_LEVELS: Dict = {"util": (80.0, 90.0)}
+DEFAULT_CPU_LEVELS: Dict = {"util": ("fixed", (80.0, 90.0))}
 
 
 def discovery_fortios_resources_cpu(section: FortiResource) -> DiscoveryResult:

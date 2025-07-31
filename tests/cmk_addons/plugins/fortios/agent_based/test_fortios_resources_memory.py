@@ -15,10 +15,7 @@
 # WAGNER AG
 # Developer: opensource@wagner.ch
 
-from typing import (
-    Dict,
-    Tuple,
-)
+from typing import Dict
 
 import pytest
 
@@ -27,35 +24,29 @@ from cmk.agent_based.v2 import (
     Result,
     State,
 )
-from cmk_addons.plugins.fortios.agent_based.fortios_resources import (
-    FortiResource,
-    Resource,
-    ResourceResult,
-    Session,
-)
-from cmk_addons.plugins.fortios.agent_based.fortios_resources_cpu import (
-    check_fortios_resources_cpu,
+from cmk_addons.plugins.fortios.agent_based.fortios_resources import FortiResource, Resource, ResourceResult, Session
+from cmk_addons.plugins.fortios.agent_based.fortios_resources_memory import (
+    check_fortios_resources_memory,
 )
 
-DEFAULT_CPU_LEVELS: Dict = {"util": ("fixed", (80.0, 90.0))}
+DEFAULT_MEMORY_LEVELS: Dict = {"memory_levels": ("fixed", (70.0, 80.0))}
 
 
-# Test data for check_fortios_resources_cpu
 @pytest.mark.parametrize(
     "params, section, expected_check_result",
     [
         (
-            DEFAULT_CPU_LEVELS,
+            DEFAULT_MEMORY_LEVELS,
             (FortiResource(vdoms=[ResourceResult(vdom="root", results=Resource(cpu=25, memory=21, session=Session(current_usage=5000)))], total_cpu=25, total_memory=25, total_sessions=5000)),
             [
                 Result(state=State.OK, summary="Total usage"),
-                Metric("util", 25.0, boundaries=(0, 100)),
-                Result(state=State.OK, summary="CPU load: 25.00%"),
-                Metric("util", 25.0, boundaries=(0, 100)),
+                Metric("memory_util", 21.0, levels=(70.0, 80.0), boundaries=(0, 100)),
+                Result(state=State.OK, summary="21.00%"),
+                Metric("memory_util", 21.0, levels=(70.0, 80.0), boundaries=(0, 100)),
             ],
         ),
     ],
 )
-def test_check_fortios_resources_cpu(params, section: FortiResource, expected_check_result: Tuple) -> None:
-    check_results = list(check_fortios_resources_cpu(params, section))
-    assert check_results == expected_check_result
+def test_check_fortios_resources_memory(params: Dict, section: FortiResource, expected_check_result) -> None:
+    actual_check_result = list(check_fortios_resources_memory(params, section))
+    assert actual_check_result == expected_check_result
