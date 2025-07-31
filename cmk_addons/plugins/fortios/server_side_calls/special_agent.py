@@ -20,13 +20,12 @@ Special agent for monitoring Fortinet Devices with FortiOS via REST API 2.x with
 """
 
 from collections.abc import Iterator
-from pydantic import BaseModel
-
 from typing import Any
+
+from pydantic import BaseModel
 
 from cmk.server_side_calls.v1 import (
     HostConfig,
-    Secret,
     SpecialAgentCommand,
     SpecialAgentConfig,
 )

@@ -14,7 +14,7 @@
 # WAGNER AG
 # Developer: opensource@wagner.ch
 
-from cmk.rulesets.v1 import Title, Help, Label
+from cmk.rulesets.v1 import Help, Label, Title
 from cmk.rulesets.v1.form_specs import (
     BooleanChoice,
     CascadingSingleChoice,
@@ -24,12 +24,10 @@ from cmk.rulesets.v1.form_specs import (
     Dictionary,
     FixedValue,
     Integer,
-    Password,
     String,
-    migrate_to_password,
     validators,
 )
-from cmk.rulesets.v1.rule_specs import Topic, SpecialAgent
+from cmk.rulesets.v1.rule_specs import SpecialAgent, Topic
 
 
 def _valuespec_special_agents_fortios() -> Dictionary:

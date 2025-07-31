@@ -21,24 +21,22 @@ Special agent for monitoring Fortinet Devices with FortiOS via REST API 2.x with
 
 from __future__ import annotations
 
-import datetime
 import logging
 import sys
-import traceback
-
 from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Optional
 
 import requests
 import urllib3
-from cmk.special_agents.v0_unstable.agent_common  import (
+from requests.adapters import HTTPAdapter
+
+from cmk.special_agents.v0_unstable.agent_common import (
     ConditionalPiggybackSection,
     SectionWriter,
     special_agent_main,
 )
 from cmk.special_agents.v0_unstable.argument_parsing import Args, create_default_argument_parser
-from requests.adapters import HTTPAdapter
 
 logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 _LOGGER = logging.getLogger("agent_fortios")
@@ -247,9 +245,7 @@ class HostNameValidationAdapter(HTTPAdapter):
 
 
 class _FortiOSSession:
-    def __init__(
-        self, server: str, port: int, cert_check: bool | str, timeout: int
-    ) -> None:
+    def __init__(self, server: str, port: int, cert_check: bool | str, timeout: int) -> None:
         self._session = requests.Session()
         self._base_url = f"https://{server}:{port}"
         self._port = port
@@ -305,9 +301,7 @@ class FortiOS:
         self._session = _FortiOSSession(server, port, cert_check, timeout)
         self._api_token = api_token
 
-    def collect_section_data(
-        self, spec: _SectionSpec, latest_version: str = _REST_VERSION
-    ) -> tuple[str, Mapping]:
+    def collect_section_data(self, spec: _SectionSpec, latest_version: str = _REST_VERSION) -> tuple[str, Mapping]:
         try:
             section_response = self._session.get(
                 f"{latest_version}/{spec.path}",
@@ -323,22 +317,16 @@ class FortiOS:
 
         if section_response.status_code == 429:
             _LOGGER.error(f"Collecting section: {spec.name} failed. Reason: HTTP status 429; error: ({section_response.status_code}) {section_response.reason}")
-            raise AuthError(f"IP address blacklisted or too many requests")
+            raise AuthError("IP address blacklisted or too many requests")
 
         if section_response.status_code != 200:
-            _LOGGER.error(
-                f"Collecting section: {spec.name} failed. Reason: HTTP status not 200; error: ({section_response.status_code}) {section_response.reason}"
-            )
-            raise APIEndpointNotFound(
-                f"Spec name: {spec.name} failed. Reason: HTTP status not 200; error: ({section_response.status_code}) {section_response.reason}"
-            )
+            _LOGGER.error(f"Collecting section: {spec.name} failed. Reason: HTTP status not 200; error: ({section_response.status_code}) {section_response.reason}")
+            raise APIEndpointNotFound(f"Spec name: {spec.name} failed. Reason: HTTP status not 200; error: ({section_response.status_code}) {section_response.reason}")
 
         return section_response.json()
 
 
-def _filter_applicable_sections(
-    sections: Sequence[_SectionSpec], latest_version: str = _REST_VERSION
-) -> Iterator[_SectionSpec]:
+def _filter_applicable_sections(sections: Sequence[_SectionSpec], latest_version: str = _REST_VERSION) -> Iterator[_SectionSpec]:
     for spec in sections:
         if spec.min_version > latest_version:
             _LOGGER.error(
@@ -377,8 +365,8 @@ def agent_fortios(args: Args) -> int:
 
         except Exception:
             _LOGGER.error(f"Collecting {spec.name} failed: {spec.path}")
-            sys.stdout.write("\n<<<>>>\n") # Hotfix: End previous-section. SectionError appends the error output to a working section otherwise. 
-                                           # CorrectSolution: SectionWriter+co should close its section on __exit__
+            sys.stdout.write("\n<<<>>>\n")  # Hotfix: End previous-section. SectionError appends the error output to a working section otherwise.
+            # CorrectSolution: SectionWriter+co should close its section on __exit__
             SectionError(f"Section error for spec: {spec.name} with path: {spec.path}")
             if args.debug:
                 return 1
@@ -430,29 +418,19 @@ def agent_fortios(args: Args) -> int:
             (item for item in switch_port_stats if item.get("serial") == switch_serial),
             None,
         )
-        
+
         # map the switch data to the correct switch
         if "7.2" in managed_switch["version"]:
-            switch_data_result = next(
-                (item for item in switch_data if item.get("switch-id") == switch_serial), None
-            )
+            switch_data_result = next((item for item in switch_data if item.get("switch-id") == switch_serial), None)
             switch_health_data_result = switch_health_data.get(switch.get("serial"))
 
             with ConditionalPiggybackSection(switch["name"]):
                 with SectionWriter("fortios_managed_switch_interface") as writer:
-                    writer.append_json(
-                        {
-                            "switch_port_stats": switch_port_stats_result,
-                            "switch_ports": switch,
-                            "switch_status": switch_data_result
-                        }
-                    )
+                    writer.append_json({"switch_port_stats": switch_port_stats_result, "switch_ports": switch, "switch_status": switch_data_result})
                 with SectionWriter("fortios_managed_switch_health") as writer:
                     writer.append_json(switch_health_data_result)
         else:
-            switch_data_result = next(
-                (item for item in switch_data if item.get("switch-id") == switch_id), None
-            )
+            switch_data_result = next((item for item in switch_data if item.get("switch-id") == switch_id), None)
             switch_health_data_result = switch_health_data.get(switch.get("switch-id"))
 
             with ConditionalPiggybackSection(switch["switch-id"]):

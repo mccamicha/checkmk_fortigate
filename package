@@ -3,7 +3,7 @@
     "description": "Fortinet special agent to monitor FortiOS via REST API",
     "download_url": "https: //github.com/WagnerAG/checkmk_fortigate",
     "files": {
-        "cmk_addons/plugins/fortios/agent_based": [
+        "agent_based": [
             "fortios_bgp_peer.py",
             "fortios_device_info_inventory.py",
             "fortios_dhcp_lease.py",
@@ -33,7 +33,7 @@
             "fortios_sslvpn.py",
             "fortios_uptime.py",
         ],
-        "agents": ["cmk_addons/plugins/fortios/special_agents/agent_fortios.py"],
+        "agents": ["special_agents/agent_fortios.py"],
         "checkman": [
             "fortios_bgp_peer",
             "fortios_dhcp_scope",
@@ -56,9 +56,12 @@
             "fortios_sslvpn",
             "fortios_uptime",
         ],
-        "cmk_addons/plugins/fortios/rulesets": ["datasource_program.py"],
-        "cmk_addons/plugins/fortios/server_side_calls": ["special_agent.py"],
-        "cmk_addons/plugins/fortios/libexec": ["agent_fortios"],
+        "rulesets": [
+            "datasource_program.py",
+            "fortios_dhcp_scope_check_parameter.py",
+        ],
+        "server_side_calls": ["special_agent.py"],
+        "libexec": ["agent_fortios"],
         "doc": [],
         "inventory": [],
         "notifications": [],
