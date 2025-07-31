@@ -25,8 +25,12 @@ jobs:
 
       - name: Setup links
         run: .devcontainer/symlink.sh
+        
       - name: Update GITHUB_PATH
         run: echo "/omd/sites/cmk/bin" >> $GITHUB_PATH
+
+      - name: Add local bin to PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Build Extension
         run: .devcontainer/build.sh
