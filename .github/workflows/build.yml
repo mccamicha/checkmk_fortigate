@@ -1,6 +1,11 @@
 name: build
 
 on:
+  push:
+    branches:
+    - '**'
+    tags-ignore:
+    - 'v*'
   pull_request:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -10,7 +15,7 @@ jobs:
     name: Build Checkmk package
     runs-on: ubuntu-latest
     container:
-      image: checkmk/check-mk-raw:2.3.0-latest
+      image: checkmk/check-mk-raw:2.4.0-latest
 
     env:
       OMD_ROOT: /omd/sites/cmk
@@ -29,8 +34,6 @@ jobs:
       - name: Update GITHUB_PATH
         run: echo "/omd/sites/cmk/bin" >> $GITHUB_PATH
 
-      - name: Add local bin to PATH
-        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Build Extension
         run: .devcontainer/build.sh
