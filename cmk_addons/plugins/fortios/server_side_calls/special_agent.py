@@ -43,7 +43,7 @@ class Params(BaseModel):
 
 
 def _agent_fortios_arguments(params: Params, host_config: HostConfig) -> Iterator[SpecialAgentCommand]:
-    command_arguments: list[str | str] = []
+    command_arguments: list[str] = []
     if params.token is not None:
         command_arguments += ["--api-token", params.token]
     if params.port is not None:

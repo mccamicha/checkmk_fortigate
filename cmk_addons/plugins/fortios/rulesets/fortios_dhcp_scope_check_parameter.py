@@ -34,7 +34,7 @@ def _form_check_fortios_dhcp_scope() -> Dictionary:
                     title=Title("Scope levels"),
                     level_direction=LevelDirection.UPPER,
                     form_spec_template=Integer(),
-                    prefill_fixed_levels=InputHint(value=(80.0, 90.0)),
+                    prefill_fixed_levels=InputHint(value=(80, 90)),
                 )
             ),
         },

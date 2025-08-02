@@ -20,7 +20,7 @@ from typing import Dict, Tuple
 import pytest
 from freezegun import freeze_time
 
-from cmk.base.plugins.agent_based.agent_based_api.v1 import Metric, Result, State
+from cmk.agent_based.v2 import Metric, Result, State
 from cmk_addons.plugins.fortios.agent_based.fortios_license import (
     AntivirusModule,
     AppCtrlModule,
