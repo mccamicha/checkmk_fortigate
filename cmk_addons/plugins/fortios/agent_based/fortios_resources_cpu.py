@@ -39,7 +39,7 @@ def discovery_fortios_resources_cpu(section: FortiResource) -> DiscoveryResult:
 
 
 def check_fortios_resources_cpu(params: Mapping[str, Any], section: FortiResource) -> CheckResult:
-    cpu_levels = params.get("cpu_levels")
+    cpu_levels = params.get("util")
 
     yield Result(state=State.OK, summary="Total usage")
 
