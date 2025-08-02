@@ -24,9 +24,9 @@ from __future__ import annotations
 
 from typing import Any, Dict, Mapping
 
-from .fortios_resources import FortiResource
+from cmk.agent_based.v2 import CheckPlugin, CheckResult, DiscoveryResult, Metric, Result, Service, State, check_levels
 
-from cmk.agent_based.v2 import CheckPlugin, Metric, Result, Service, State, CheckResult, DiscoveryResult, check_levels
+from .fortios_resources import FortiResource
 
 DEFAULT_SESSION_LEVELS: Dict = {"session_levels": ("fixed", (20000, 30000))}
 
