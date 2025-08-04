@@ -37,7 +37,7 @@ from cmk_addons.plugins.fortios.agent_based.fortios_resources_cpu import (
     check_fortios_resources_cpu,
 )
 
-DEFAULT_CPU_LEVELS: Dict = {"util": ("fixed", (80.0, 90.0))}
+DEFAULT_CPU_LEVELS: Dict = {"util": ("fixed", (80, 90))}
 
 
 # Test data for check_fortios_resources_cpu
@@ -49,9 +49,9 @@ DEFAULT_CPU_LEVELS: Dict = {"util": ("fixed", (80.0, 90.0))}
             (FortiResource(vdoms=[ResourceResult(vdom="root", results=Resource(cpu=25, memory=21, session=Session(current_usage=5000)))], total_cpu=25, total_memory=25, total_sessions=5000)),
             [
                 Result(state=State.OK, summary="Total usage"),
-                Metric("util", 25.0, boundaries=(0, 100)),
+                Metric("util", 25.0, levels=(80.0, 90.0), boundaries=(0.0, 100.0)),
                 Result(state=State.OK, summary="CPU load: 25.00%"),
-                Metric("util", 25.0, boundaries=(0, 100)),
+                Metric("util", 25.0, levels=(80.0, 90.0), boundaries=(0.0, 100.0)),
             ],
         ),
     ],
