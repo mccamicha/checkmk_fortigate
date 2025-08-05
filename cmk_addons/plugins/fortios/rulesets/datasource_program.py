@@ -17,15 +17,13 @@
 from cmk.rulesets.v1 import Help, Label, Title
 from cmk.rulesets.v1.form_specs import (
     BooleanChoice,
-    CascadingSingleChoice,
-    CascadingSingleChoiceElement,
     DefaultValue,
     DictElement,
     Dictionary,
-    FixedValue,
     Integer,
-    String,
+    Password,
     validators,
+    migrate_to_password,
 )
 from cmk.rulesets.v1.rule_specs import SpecialAgent, Topic
 
@@ -34,12 +32,6 @@ def _valuespec_special_agents_fortios() -> Dictionary:
     return Dictionary(
         title=Title("FortiOS"),
         elements={
-            "ipaddress": DictElement(
-                parameter_form=String(
-                    title=Title("IP Address"),
-                ),
-                required=True,
-            ),
             "port": DictElement(
                 parameter_form=Integer(
                     title=Title("TCP port number"),
@@ -49,30 +41,21 @@ def _valuespec_special_agents_fortios() -> Dictionary:
                 ),
                 required=True,
             ),
-            "token": DictElement(
-                parameter_form=String(
+            "api_token": DictElement(
+                parameter_form=Password(
                     title=Title("API Token"),
+                    help_text=Help("API token for the Fortigate firewall."),
                     custom_validate=(validators.LengthInRange(min_value=1),),
+                    migrate=migrate_to_password,
                 ),
                 required=True,
             ),
             "ssl": DictElement(
-                parameter_form=CascadingSingleChoice(
+                parameter_form=BooleanChoice(
                     title=Title("Certificate Verification"),
-                    prefill=DefaultValue("hostname"),
                     help_text=Help("Specify whether the host's certificate should be verified."),
-                    elements=[
-                        CascadingSingleChoiceElement(
-                            name="hostname",
-                            title=Title("Use hostname for verification"),
-                            parameter_form=FixedValue(value=None),
-                        ),
-                        CascadingSingleChoiceElement(
-                            name="deactivate",
-                            title=Title("Do not verify certificate"),
-                            parameter_form=FixedValue(value=None),
-                        ),
-                    ],
+                    prefill=DefaultValue(True),
+                    label=Label("Enable certificate verification"),
                 ),
                 required=True,
             ),

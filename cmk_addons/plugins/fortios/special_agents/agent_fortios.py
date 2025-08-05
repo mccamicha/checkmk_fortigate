@@ -184,7 +184,6 @@ def parse_arguments(argv: Sequence[str] | None) -> Args:
     parser.add_argument(
         "--api-token",
         type=str,
-        required=True,
         help=("Generate the API token through the CLI"),
     )
     parser.add_argument("server", type=str, help="Hostname or IP address")
@@ -252,19 +251,13 @@ class _FortiOSSession:
 
         self._verify = True
         if cert_check is False:
-            # Watch out: we must provide the verify keyword to every individual request call!
-            # Else it will be overwritten by the REQUESTS_CA_BUNDLE env variable
             self._verify = False
             urllib3.disable_warnings(category=urllib3.exceptions.InsecureRequestWarning)
-        elif isinstance(cert_check, str):
-            self._session.mount(self._base_url, HostNameValidationAdapter(cert_check))
 
         self._timeout = timeout
         self._x_auth_token = ""
 
     def post(self, path: str, headers: Mapping[str, str]) -> requests.Response:
-        # Watch out: we must provide the verify keyword to every individual request call!
-        # Else it will be overwritten by the REQUESTS_CA_BUNDLE env variable
         return self._session.post(
             f"{self._base_url}/api/{path}",
             headers=headers,
@@ -278,8 +271,6 @@ class _FortiOSSession:
         headers: Mapping[str, str],
         params: Mapping[str, str] | None = None,
     ) -> requests.Response:
-        # Watch out: we must provide the verify keyword to every individual request call!
-        # Else it will be overwritten by the REQUESTS_CA_BUNDLE env variable
         return self._session.get(
             f"{self._base_url}/api/{path}",
             headers=headers,
@@ -295,7 +286,7 @@ class FortiOS:
         server: str,
         port: int,
         api_token: str,
-        cert_check: bool | str,
+        cert_check: bool,
         timeout: int,
     ) -> None:
         self._session = _FortiOSSession(server, port, cert_check, timeout)

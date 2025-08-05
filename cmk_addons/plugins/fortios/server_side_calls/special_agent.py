@@ -20,7 +20,6 @@ Special agent for monitoring Fortinet Devices with FortiOS via REST API 2.x with
 """
 
 from collections.abc import Iterator
-from typing import Any
 
 from pydantic import BaseModel
 
@@ -28,31 +27,32 @@ from cmk.server_side_calls.v1 import (
     HostConfig,
     SpecialAgentCommand,
     SpecialAgentConfig,
+    Secret,
 )
 
 
 class Params(BaseModel):
     """params validator"""
 
-    token: str | None = None
+    api_token: Secret | None = None
     port: int | None = None
-    ssl: Any | None = None
+    ssl: bool | None
     retries: int | None = None
     timeout: int | None = None
     debug: bool | None = None
 
 
 def _agent_fortios_arguments(params: Params, host_config: HostConfig) -> Iterator[SpecialAgentCommand]:
-    command_arguments: list[str] = []
-    if params.token is not None:
-        command_arguments += ["--api-token", params.token]
+    command_arguments: list[str | Secret] = []
+    if params.api_token is not None:
+        command_arguments += ["--api-token", params.api_token.unsafe()]
     if params.port is not None:
         command_arguments += ["--port", str(params.port)]
     if params.timeout is not None:
         command_arguments += ["--timeout", str(params.timeout)]
     if params.retries is not None:
         command_arguments += ["--retries", str(params.retries)]
-    if params.ssl is not None:
+    if not params.ssl:
         command_arguments += ["--no-cert-check"]
     if params.debug:
         command_arguments += ["--debug"]
