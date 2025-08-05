@@ -2,7 +2,7 @@
 
 ARG VARIANT="2.4.0-latest"
 
-FROM checkmk/check-mk-raw:${VARIANT}
+FROM checkmk/check-mk-cloud:${VARIANT}
 
 RUN /docker-entrypoint.sh /bin/true
 
