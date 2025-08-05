@@ -165,8 +165,12 @@ class PhysicalPort(BaseModel):
 
     @property
     def summary(self):
+        return f"{f'[{self.description}]' if self.description else ''} ({self.port_status})"
+
+    @property
+    def summaryOK(self):
         port_power = str(f"{self.port_power:.2f} W")
-        return f"{f'[{self.description}]' if self.description else ''} ({self.port_status}), MAC: {self.mac_addr}, Media Type: {self.media_type}, Speed: {self.speed}, Duplex: {self.duplex}, PoE Power: {port_power if Power(self.power_status) == 2 else Power(self.power_status)}"
+        return f"MAC: {self.mac_addr}, Media Type: {self.media_type}, Speed: {self.speed}, Duplex: {self.duplex}, PoE Power: {port_power if Power(self.power_status) == 2 else Power(self.power_status)}"
 
 
 class Power(IntEnum):
@@ -251,9 +255,10 @@ def check_fortios_switch_interface(item: str, section: Mapping[str, PhysicalPort
         return
     if interface.port_status == "down":
         yield Result(state=State.CRIT, summary=interface.summary)
+        yield Result(state=State.OK, summary=interface.summaryOK)
         return
     else:
-        yield Result(state=State.OK, summary=interface.summary)
+        yield Result(state=State.OK, summary=f"{interface.summary} {interface.summaryOK}")
 
     value_store = get_value_store()
     time_now = time.time()

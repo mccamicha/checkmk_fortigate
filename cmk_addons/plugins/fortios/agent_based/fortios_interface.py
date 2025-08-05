@@ -98,7 +98,11 @@ class Interface(BaseModel):
     @property
     def summary(self):
         description = (f"{self.alias if self.alias != '' else self.description if self.description else ''}").replace("(", "[").replace(")", "]")
-        return f"{description} ({Link(self.link)}), VDOM: {self.vdom}, Duplex: {Duplex(self.duplex)}, VLAN: {self.vlanid}, IP: {self.ip}/{self.mask}, Parent: {self.interface}"
+        return f"{description} ({Link(self.link)})"
+
+    @property
+    def summaryOK(self):
+        return f"VDOM: {self.vdom}, Duplex: {Duplex(self.duplex)}, VLAN: {self.vlanid}, IP: {self.ip}/{self.mask}, Parent: {self.interface}"
 
 
 class VdomData(BaseModel):
@@ -197,13 +201,20 @@ def discovery_fortios_interfaces(params: Mapping[str, Any], section_fortios_inte
 
 def check_fortios_interfaces(item: str, section_fortios_interfaces, section_fortios_interfaces_cmdb) -> CheckResult:
     interface = section_fortios_interfaces.get(item)
+
     if not interface:
         yield Result(state=State.UNKNOWN, summary="Interface %s is missing" % (item))
         return
     if not interface.link:
         yield Result(state=State.CRIT, summary=interface.summary)
+        yield Result(state=State.OK, summary=interface.summaryOK)
     else:
-        yield Result(state=State.OK, summary=interface.summary)
+        yield Result(state=State.OK, summary=f"{interface.summary}, {interface.summaryOK}")
+        yield from check_levels(
+            value=interface.speed,
+            label="Speed",
+            render_func=nicspeed,
+        )
 
     value_store = get_value_store()
     now_time = time.time()
@@ -232,12 +243,6 @@ def check_fortios_interfaces(item: str, section_fortios_interfaces, section_fort
                     label="Out",
                     render_func=networkbandwidth,
                 )
-
-    yield from check_levels(
-        value=interface.speed,
-        label="Speed",
-        render_func=nicspeed,
-    )
 
 
 check_plugin_fortios_interfaces = CheckPlugin(
