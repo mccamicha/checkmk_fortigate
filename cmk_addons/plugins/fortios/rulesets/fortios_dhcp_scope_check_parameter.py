@@ -42,7 +42,7 @@ def _form_check_fortios_dhcp_scope() -> Dictionary:
 
 
 rule_spec_fortios_dhcp_scope = CheckParameters(
-    title=Title("FortiOS DHCP scope name"),
+    title=Title("FortiOS DHCP scope usage levels"),
     topic=Topic.NETWORKING,
     name="fortios_dhcp_scope",
     parameter_form=_form_check_fortios_dhcp_scope,
