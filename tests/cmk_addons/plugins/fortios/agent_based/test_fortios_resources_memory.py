@@ -29,7 +29,7 @@ from cmk_addons.plugins.fortios.agent_based.fortios_resources_memory import (
     check_fortios_resources_memory,
 )
 
-DEFAULT_MEMORY_LEVELS: Dict = {"memory_levels": ("fixed", (70.0, 80.0))}
+DEFAULT_MEMORY_LEVELS: Dict = {"levels": ("fixed", (70.0, 80.0))}
 
 
 @pytest.mark.parametrize(

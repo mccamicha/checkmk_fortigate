@@ -37,7 +37,7 @@ def discovery_fortios_resources_memory(section: FortiResource) -> DiscoveryResul
 
 
 def check_fortios_resources_memory(params: Mapping[str, Any], section: FortiResource) -> CheckResult:
-    memory_levels = params.get("memory_levels")
+    memory_levels = params.get("levels")
 
     yield Result(state=State.OK, summary="Total usage")
 
@@ -53,7 +53,7 @@ def check_fortios_resources_memory(params: Mapping[str, Any], section: FortiReso
 
     if len(section.vdoms) > 1:
         for item in section.vdoms:
-            yield Metric(item.vdom, item.results.memory, levels=memory_levels, boundaries=(0, 100))
+            yield Metric(item.vdom, item.results.memory, levels=memory_levels[1], boundaries=(0, 100))
 
 
 check_plugin_fortios_resources_memory = CheckPlugin(
