@@ -90,5 +90,5 @@ rule_spec_fortios_datasource_programs = SpecialAgent(
     title=Title("FortiOS Agent"),
     topic=Topic.NETWORKING,
     parameter_form=_valuespec_special_agents_fortios,
-    help_text=("This rule selects the Agent FortiOS instead of the normal Check_MK Agent which collects the data through the Fortigate REST API"),
+    help_text=Help("This rule selects the Agent FortiOS instead of the normal Check_MK Agent which collects the data through the Fortigate REST API"),
 )
