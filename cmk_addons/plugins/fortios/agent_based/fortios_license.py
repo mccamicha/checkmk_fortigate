@@ -83,7 +83,7 @@ class SupportDetail(BaseModel):
 
 class Support(BaseModel):
     hardware: Optional[SupportDetail] | None = None
-    enhanced: SupportDetail
+    enhanced: SupportDetail | None = None
 
 
 # FortiCare module
@@ -93,7 +93,7 @@ class FortiCareModule(ModuleInterface):
     registration_status: str
     registration_supported: bool
     account: str
-    support: Support
+    support: Support | None = None
     company: str
     industry: str
 
