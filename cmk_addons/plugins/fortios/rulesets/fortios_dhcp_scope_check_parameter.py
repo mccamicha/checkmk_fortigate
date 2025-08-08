@@ -22,7 +22,7 @@ Check_MK WATO rule spec for FortiOS special agent
 
 from cmk.rulesets.v1 import Title
 from cmk.rulesets.v1.form_specs import DictElement, Dictionary, InputHint, Integer, LevelDirection, SimpleLevels
-from cmk.rulesets.v1.rule_specs import CheckParameters, HostAndServiceCondition, Topic
+from cmk.rulesets.v1.rule_specs import CheckParameters, HostAndItemCondition, Topic
 
 
 def _form_check_fortios_dhcp_scope() -> Dictionary:
@@ -46,5 +46,5 @@ rule_spec_fortios_dhcp_scope = CheckParameters(
     topic=Topic.NETWORKING,
     name="fortios_dhcp_scope",
     parameter_form=_form_check_fortios_dhcp_scope,
-    condition=HostAndServiceCondition,
+    condition=HostAndItemCondition(item_title=Title("DHCP scope name")),
 )
