@@ -26,16 +26,18 @@ import json
 from typing import Any, Dict, Mapping, Optional
 
 from cmk.agent_based.v2 import (
+    AgentSection,
+    CheckPlugin,
+    CheckResult,
+    DiscoveryResult,
     Result,
     Service,
     State,
+    check_levels,
 )
 from pydantic import BaseModel, field_validator
 
-from cmk.agent_based.v1 import check_levels
-from cmk.agent_based.v2 import AgentSection, CheckPlugin, CheckResult, DiscoveryResult
-
-DEFAULT_OFFSET_LEVELS: Dict = {"offset_levels": (4, 0.2, 0.5)}
+DEFAULT_OFFSET_LEVELS: Dict = {"offset_levels": ("fixed", (4, 0.2, 0.5))}
 
 
 class FortiNTP(BaseModel, frozen=True):
@@ -88,29 +90,29 @@ def discovery_fortios_ntp(section: Mapping[str, FortiNTP]) -> DiscoveryResult:
 
 
 def check_fortios_ntp(params: Mapping[str, Any], section: Mapping[str, FortiNTP]) -> CheckResult:
-    ntp = list(section.values())[0]
+    ntp = next(iter(section.values()), None)
     if ntp:
         yield Result(state=State.OK, summary=ntp.summary)
     else:
-        yield Result(state=State.UNKNOWN, summary=f"Item {ntp} not found...")
-        return
+        yield Result(state=State.WARN, summary="No NTP Server is enabled or available")
 
-    crit_stratum, warn, crit = params["offset_levels"]
+    crit_stratum, warn, crit = params.get("offset_levels")[1]
     yield from check_levels(
         value=ntp.offset,
-        levels_upper=(warn, crit),
-        levels_lower=(-warn, -crit),
+        levels_upper=("fixed", (warn, crit)),
+        levels_lower=("fixed", (-warn, -crit)),
         metric_name="time_offset",
         render_func=lambda f: "%.1f ms" % (f * 1000),
         label="Time offset",
     )
 
-    yield from check_levels(
-        value=ntp.stratum,
-        levels_upper=(crit_stratum, crit_stratum),
-        render_func=lambda d: str(int(d)),
-        label="Stratum",
-    )
+    if ntp.stratum is not None:
+        yield from check_levels(
+            value=ntp.stratum,
+            levels_upper=("fixed", (crit_stratum, crit_stratum)),
+            render_func=lambda d: str(int(d)),
+            label="Stratum",
+        )
 
 
 check_plugin_fortios_ntp = CheckPlugin(

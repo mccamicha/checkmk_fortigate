@@ -95,3 +95,16 @@ def test_parse_fortios_ntp(string_table: list[list[str]] | list[list], expected_
 def test_check_fortios_ntp(section: Mapping[str, FortiNTP], expected_check_result: list) -> None:
     actual_check_result = list(check_fortios_ntp(DEFAULT_OFFSET_LEVELS, section))
     assert actual_check_result == expected_check_result
+
+def test_parse_fortios_ntp_all_unreachable() -> None:
+    string_table = [
+        [
+            '{"action": "status", "build": 2795, "http_method": "GET", "name": "ntp", "path": "system", '
+            '"results": [{"expires": 411, "ip": "208.91.112.62", "reachable": false, "server": "ntp2.fortiguard.com"}, '
+            '{"expires": 1028, "ip": "208.91.112.61", "reachable": false, "server": "ntp1.fortiguard.com"}, '
+            '{"expires": 189, "ip": "208.91.112.60", "reachable": false, "server": "ntp2.fortiguard.com"}, '
+            '{"expires": 1069, "ip": "208.91.112.63", "reachable": false, "server": "ntp1.fortiguard.com"}], '
+            '"serial": "Serial01", "status": "success", "vdom": "root", "version": "v7.4.x"}'
+        ]
+    ]
+    assert parse_fortios_ntp(string_table) is None
