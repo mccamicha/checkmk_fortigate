@@ -45,7 +45,7 @@ class Params(BaseModel):
 def _agent_fortios_arguments(params: Params, host_config: HostConfig) -> Iterator[SpecialAgentCommand]:
     command_arguments: list[str | Secret] = []
     if params.api_token is not None:
-        command_arguments += ["--api-token", params.api_token.unsafe()]
+        command_arguments += ["--api-token", params.api_token]
     if params.port is not None:
         command_arguments += ["--port", str(params.port)]
     if params.timeout is not None:

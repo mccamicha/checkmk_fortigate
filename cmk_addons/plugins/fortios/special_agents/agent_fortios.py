@@ -22,6 +22,7 @@ Special agent for monitoring Fortinet Devices with FortiOS via REST API 2.x with
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 import sys
 from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import dataclass
@@ -36,6 +37,7 @@ from cmk.special_agents.v0_unstable.agent_common import (
     SectionWriter,
     special_agent_main,
 )
+from cmk.utils import password_store
 from cmk.special_agents.v0_unstable.argument_parsing import Args, create_default_argument_parser
 
 logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
@@ -289,8 +291,9 @@ class FortiOS:
         cert_check: bool,
         timeout: int,
     ) -> None:
+        pw_id, pw_path = api_token.split(":")
         self._session = _FortiOSSession(server, port, cert_check, timeout)
-        self._api_token = api_token
+        self._api_token = password_store.lookup(Path(pw_path), pw_id)
 
     def collect_section_data(self, spec: _SectionSpec, latest_version: str = _REST_VERSION) -> tuple[str, Mapping]:
         try:
