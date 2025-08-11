@@ -162,7 +162,7 @@ class Duplex(IntEnum):
         return self.name
 
 
-DISCOVERY_DEFAULT_PARAMETERS = dict({"fortios_interface_excluded": [], "item_discovery_link_status": False, "item_excluded_by_type": "index"})
+DISCOVERY_DEFAULT_PARAMETERS = dict({"item_included_by_type": {"type": "name", "strings": []}, "item_excluded_by_type": {"type": "name", "strings": []}})
 
 
 def parse_fortios_interfaces(string_table):
@@ -186,8 +186,8 @@ agent_section_fortios_interfaces = AgentSection(
 
 
 def discovery_fortios_interfaces(params: Mapping[str, Any], section_fortios_interfaces, section_fortios_interfaces_cmdb) -> DiscoveryResult:
-    item_discovery_by_type = params["item_excluded_by_type"]
-    item_discovery_link_status = params["item_discovery_link_status"]
+    item_included_by_type = params["item_included_by_type"]
+    item_excluded_by_type = params["item_excluded_by_type"]
 
     for item in section_fortios_interfaces:
         interface_name: None
@@ -201,16 +201,24 @@ def discovery_fortios_interfaces(params: Mapping[str, Any], section_fortios_inte
         else:
             interface_name = interface.id
 
-        if item_discovery_by_type == "descr" and (interface.description) is not None:
+        if item_included_by_type["type"] == "descr" and (interface.description) is not None:
             interface_name = interface.description
 
-        elif item_discovery_by_type == "alias" and (interface.alias) is not None:
+        elif item_included_by_type == "alias" and (interface.alias) is not None:
             interface_name = interface.alias
 
-        if not any(re.search(pattern, interface_name) for pattern in params["fortios_interface_excluded"]):
-            if item_discovery_link_status:
-                if interface.link:
-                    yield Service(item=item)
+        if any(re.search(pattern, interface_name) for pattern in params["item_included_by_type"]["strings"]):
+            yield Service(item=item)
+
+        if item_excluded_by_type["type"] == "descr" and (interface.description) is not None:
+            interface_name = interface.description
+
+        elif item_excluded_by_type == "alias" and (interface.alias) is not None:
+            interface_name = interface.alias
+
+        if interface.link:
+            if any(re.search(pattern, interface_name) for pattern in params["item_excluded_by_type"]["strings"]):
+                pass
             else:
                 yield Service(item=item)
 
@@ -266,7 +274,7 @@ check_plugin_fortios_interfaces = CheckPlugin(
     service_name="Interface %s",
     sections=["fortios_interfaces", "fortios_interfaces_cmdb"],
     discovery_function=discovery_fortios_interfaces,
-    discovery_ruleset_name="discovery_fortios_interfaces",
-    discovery_default_parameters=DISCOVERY_DEFAULT_PARAMETERS,
+    discovery_ruleset_name="fortios_interface_discovery",
     check_function=check_fortios_interfaces,
+    discovery_default_parameters=DISCOVERY_DEFAULT_PARAMETERS,
 )
