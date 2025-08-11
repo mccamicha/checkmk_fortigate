@@ -37,7 +37,7 @@ def _valuespec_special_agents_fortios() -> Dictionary:
                     title=Title("TCP port number"),
                     help_text=Help("Port number for connection to the REST API."),
                     prefill=DefaultValue(8443),
-                    custom_validate=(validators.NumberInRange(min_value=1, max_value=65535),),
+                    custom_validate=(validators.NetworkPort(),),
                 ),
                 required=True,
             ),
