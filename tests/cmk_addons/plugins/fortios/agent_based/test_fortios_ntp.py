@@ -73,21 +73,21 @@ def test_parse_fortios_ntp(string_table: list[list[str]] | list[list], expected_
             ],
         ),
         (
-            {"ch.pool.ntp.org": FortiNTP(server="ch.pool.ntp.org", reachable=True, stratum=4, ip="156.106.214.52", offset=408.37003707885743, selected=True)},
+            {"ch.pool.ntp.org": FortiNTP(server="ch.pool.ntp.org", reachable=True, stratum=9, ip="156.106.214.52", offset=408.37003707885743, selected=True)},
             [
                 Result(state=State.OK, summary="Server: ch.pool.ntp.org, IP: 156.106.214.52, Selected: True"),
                 Result(state=State.WARN, summary="Time offset: 408.4 ms (warn/crit at 200.0 ms/500.0 ms)"),
                 Metric("time_offset", 0.40837003707885744, levels=(0.2, 0.5)),
-                Result(state=State.CRIT, summary="Stratum: 4 (warn/crit at 4/4)"),
+                Result(state=State.WARN, summary="Stratum: 9 (warn/crit at 8/12)"),
             ],
         ),
         (
-            {"ch.pool.ntp.org": FortiNTP(server="li.pool.ntp.org", reachable=True, stratum=5, ip="185.34.151.142", offset=-501.92375834025, selected=True)},
+            {"ch.pool.ntp.org": FortiNTP(server="li.pool.ntp.org", reachable=True, stratum=13, ip="185.34.151.142", offset=-501.92375834025, selected=True)},
             [
                 Result(state=State.OK, summary="Server: li.pool.ntp.org, IP: 185.34.151.142, Selected: True"),
                 Result(state=State.CRIT, summary="Time offset: -501.9 ms (warn/crit below -200.0 ms/-500.0 ms)"),
                 Metric("time_offset", -0.50192375834025, levels=(0.2, 0.5)),
-                Result(state=State.CRIT, summary="Stratum: 5 (warn/crit at 4/4)"),
+                Result(state=State.CRIT, summary="Stratum: 13 (warn/crit at 8/12)"),
             ],
         ),
     ],
