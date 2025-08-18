@@ -186,7 +186,7 @@ class Power(IntEnum):
         return self.name
 
 
-DISCOVERY_DEFAULT_PARAMETERS = dict({"fortios_switch_interface_discovered": [], "fortios_switch_interface_discovery_link_status": False})
+DISCOVERY_DEFAULT_PARAMETERS = dict({"item_included": [], "item_excluded": []})
 
 
 def replace_hyphens(d):
@@ -234,15 +234,17 @@ def parse_fortios_switch_interface(string_table) -> Mapping[str, PhysicalPort] |
 
 
 def discovery_fortios_switch_interface(params: Mapping[str, Any], section: Mapping[str, PhysicalPort]) -> DiscoveryResult:
-    interface_discovery_link_status = params["fortios_switch_interface_discovery_link_status"]
-    interface_discovery_desc = params["fortios_switch_interface_discovered"]
+    interface_desc_included = params["item_included"]
+    interface_desc_excluded = params["item_excluded"]
 
     for item in section:
         interface = section.get(item)
-        if interface_discovery_desc:
-            if any(re.search(pattern, interface.description) for pattern in interface_discovery_desc):
+        if interface_desc_included:
+            if any(re.search(pattern, interface.description) for pattern in interface_desc_included):
                 yield Service(item=item)
-        elif interface_discovery_link_status and interface.port_status != "up":
+        elif not any(re.search(pattern, interface.description) for pattern in interface_desc_excluded):
+            continue
+        elif interface.port_status == "down":
             continue
         else:
             yield Service(item=item)
@@ -307,6 +309,6 @@ check_plugin_fortios_managed_switch_interface = CheckPlugin(
     discovery_function=discovery_fortios_switch_interface,
     sections=["fortios_managed_switch_interface"],
     discovery_default_parameters=DISCOVERY_DEFAULT_PARAMETERS,
-    discovery_ruleset_name="discovery_fortios_switch_interface",
+    discovery_ruleset_name="fortios_switch_interface_discovery",
     check_function=check_fortios_switch_interface,
 )
