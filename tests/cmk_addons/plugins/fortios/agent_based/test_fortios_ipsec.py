@@ -86,9 +86,8 @@ def test_parse_fortios_ipsec(string_table, expected_section) -> None:
 
 
 DEFAULT_PARAMS: Dict = {
-    "fortios_tunnels_ignore": [],
-    "fortios_tunnels_src_subnet_ignore": [],
-    "fortios_tunnels_dst_subnet_ignore": [],
+    "item_names_excluded": [],
+    "item_dst_excluded": [],
 }
 
 
