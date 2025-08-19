@@ -27,10 +27,8 @@ import time
 from collections.abc import Mapping, Sequence
 from typing import Any, Optional
 
-
 from cmk.agent_based.v2.render import networkbandwidth
 from pydantic import BaseModel, model_validator
-
 
 from cmk.agent_based.v2 import AgentSection, CheckPlugin, CheckResult, DiscoveryResult, Metric, Result, Service, State, get_rate, get_value_store, check_levels
 
@@ -111,13 +109,13 @@ def replace_hyphens(d):
         return d
 
 
-def get_ignored_tunnels(ipsec_tunnel, tunnel_ignored_names: list, tunnel_ignored_dst_subnet: list):
+def get_ignored_tunnels(ipsec_tunnel, tunnel_ignored_names: list, tunnel_ignored_dst_subnets: list):
     ignored_tunnels = []
 
     for proxy_source in ipsec_tunnel.proxyid:
         # Add p2 tunnels matching destinations subnets to ignored tunnel list
         for proxy in proxy_source.proxy_dst:
-            if proxy.subnet in tunnel_ignored_dst_subnet:
+            if proxy.subnet in tunnel_ignored_dst_subnets:
                 ignored_tunnels.append(proxy_source)
 
         # Add p2 tunnels matching tunnel names to ignored tunnel list
@@ -135,7 +133,6 @@ def parse_fortios_ipsec(string_table) -> Mapping[str, FortiIPSec] | None:
         json_data = None
     if (forti_ipsec_tunnels := json_data[0].get("results")) in ({}, []):
         return None
-
     return {item["name"]: FortiIPSec(**item) for item in replace_hyphens(forti_ipsec_tunnels)}
 
 
@@ -155,21 +152,21 @@ def check_fortios_ipsec(item: str, params: Mapping[str, Any], section: Mapping[s
         )
         return
 
-    tunnel_ignored_names = params.get("fortios_tunnels_ignore", [])
-    tunnel_ignored_dst_subnet = params.get("fortios_tunnels_dst_subnet_ignore", [])
+    tunnel_ignored_names = params.get("item_names_excluded", [])
+    tunnel_ignored_dst_subnets = params.get("item_dst_excluded", [])
 
-    ignored_tunnels = get_ignored_tunnels(ipsec_tunnel, tunnel_ignored_names, tunnel_ignored_dst_subnet)
+    ignored_tunnels = get_ignored_tunnels(ipsec_tunnel, tunnel_ignored_names, tunnel_ignored_dst_subnets)
 
     details = f"""Tunnels up: [{", ".join([f"{proxy.p2name}: {[dest.subnet for dest in proxy.proxy_dst]}" for proxy in ipsec_tunnel.proxyid if proxy.status == "up"])}], \n
                 Tunnels down: [{", ".join([f"{proxy.p2name}: {[dest.subnet for dest in proxy.proxy_dst]}" for proxy in ipsec_tunnel.proxyid if proxy.status == "down"])}], \n
                 Tunnels ignored by name: [{", ".join(tunnel_ignored_names)}], \n
-                Tunnels ignored by destination subnet: [{", ".join(tunnel_ignored_dst_subnet)}], \n
+                Tunnels ignored by destination subnet: [{", ".join(tunnel_ignored_dst_subnets)}], \n
                 """
 
     if ipsec_tunnel.tunnels_up == ipsec_tunnel.tunnels_total:
         yield Result(state=State.OK, summary=ipsec_tunnel.summary, details=details)
 
-    elif any(str(proxy_source.p2name) == (ipsec_tunnel.proxyid[0].p2name) for proxy_source in ignored_tunnels):
+    elif (str(proxy_source.p2name) == (ipsec_tunnel.proxyid[0].p2name) for proxy_source in ignored_tunnels):
         yield Result(state=State.OK, summary=ipsec_tunnel.name, details=details)
     else:
         yield Result(state=State.CRIT, summary=ipsec_tunnel.summary, details=details)
