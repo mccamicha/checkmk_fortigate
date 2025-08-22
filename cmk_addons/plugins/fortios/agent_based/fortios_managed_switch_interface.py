@@ -186,7 +186,7 @@ class Power(IntEnum):
         return self.name
 
 
-DISCOVERY_DEFAULT_PARAMETERS = dict({"item_included": [], "item_excluded": []})
+DISCOVERY_DEFAULT_PARAMETERS = dict({"item_included": [], "item_excluded": [], "item_with_description": False})
 
 
 def replace_hyphens(d):
@@ -236,18 +236,29 @@ def parse_fortios_switch_interface(string_table) -> Mapping[str, PhysicalPort] |
 def discovery_fortios_switch_interface(params: Mapping[str, Any], section: Mapping[str, PhysicalPort]) -> DiscoveryResult:
     interface_desc_included = params["item_included"]
     interface_desc_excluded = params["item_excluded"]
+    interface_with_description = params["item_with_description"]
+
+    inc_patterns = [re.compile(p) for p in interface_desc_included]
+    exc_patterns = [re.compile(p) for p in interface_desc_excluded]
 
     for item in section:
         interface = section.get(item)
-        if interface_desc_included:
-            if any(re.search(pattern, interface.description) for pattern in interface_desc_included):
-                yield Service(item=item)
-        elif not any(re.search(pattern, interface.description) for pattern in interface_desc_excluded):
-            continue
-        elif interface.port_status == "down":
-            continue
-        else:
+        desc = interface.description or ""
+
+        if inc_patterns and any(pattern.search(desc) for pattern in inc_patterns):
             yield Service(item=item)
+            continue
+
+        if exc_patterns and any(pattern.search(desc) for pattern in exc_patterns):
+            continue
+
+        if interface.port_status == "down":
+            continue
+
+        if interface_with_description and not desc:
+            continue
+
+        yield Service(item=item)
 
 
 def check_fortios_switch_interface(item: str, section: Mapping[str, PhysicalPort]) -> CheckResult:
