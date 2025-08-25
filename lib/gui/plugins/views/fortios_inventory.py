@@ -20,7 +20,7 @@ Check_MK agent based checks to be used with agent_fortios Datasource
 
 """
 
-from cmk.gui.i18n import _
+from cmk.gui.i18n import _l
 from cmk.gui.type_defs import (
     ColumnSpec,
     PainterParameters,
@@ -36,7 +36,7 @@ multisite_builtin_views.update(
             "packaged": False,
             "single_infos": [],
             "name": "inv_fortios_devices",
-            "title": _("FortiOS devices"),
+            "title": _l("FortiOS devices"),
             "topic": "inventory",
             "sort_index": 10,
             "is_show_more": False,
@@ -103,7 +103,7 @@ multisite_builtin_views.update(
             ],
             "group_painters": [],
             "sorters": [],
-            "context": {"inv_software_os_build": {"inv_software_os_build": ""}, "inv_software_os_version": {"inv_software_os_version": ""}, "inv_hardware_system_manufacturer": {"inv_hardware_system_manufacturer": "Fortinet"}, "has_inv": {"is_has_inv": "1"}},
+            "context": {"inv_software_os_build": {"inv_software_os_build": ""}, "inv_software_os_version": {"inv_software_os_version": ""}, "inv_hardware_system_serial": {"inv_hardware_system_serial": ""}, "inv_hardware_system_manufacturer": {"inv_hardware_system_manufacturer": "Fortinet"}, "has_inv": {"is_has_inv": "1"}},
             "owner": UserId.builtin(),
             "megamenu_search_terms": [],
         },

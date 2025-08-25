@@ -46,6 +46,7 @@ class Switch(BaseModel, frozen=True):
     mc_lag_supported: bool
     led_blink_supported: bool
     os_version: str
+    eos: Optional[bool]
 
     @property
     def summary(self) -> str:

@@ -20,61 +20,66 @@ Check_MK agent based checks to be used with agent_fortios Datasource
 
 """
 
-from cmk.gui.i18n import _
+from cmk.gui.i18n import _l
 from cmk.gui.views.inventory.registry import inventory_displayhints
 
 inventory_displayhints.update(
     {
         ".networking.fortios.": {
-            "title": _("Fortigate Managed Devices"),
+            "title": _l("Fortigate Managed Devices"),
             "view": "fortiosinventory",
         },
         ".networking.fortios.accesspoints:": {
-            "title": _("Accesspoints"),
-            "keyorder": ["name", "ip_addr", "model", "serial", "syslocation"],
+            "title": _l("Accesspoints"),
+            "keyorder": ["name", "ip_address", "model", "serial_number", "version", "build", "end_of_support"],
         },
-        ".networking.fortios.accesspoints:*.name": {"title": ("Name")},
-        ".networking.fortios.accesspoints:*.ip_addr": {"title": ("IP address")},
-        ".networking.fortios.accesspoints:*.model": {"title": ("Model")},
-        ".networking.fortios.accesspoints:*.serial": {"title": ("Serial number")},
-        ".networking.fortios.accesspoints:*.syslocation": {"title": ("Location")},
+        ".networking.fortios.accesspoints:*.name": {"title": _l("Name")},
+        ".networking.fortios.accesspoints:*.ip_address": {"title": _l("IP address")},
+        ".networking.fortios.accesspoints:*.model": {"title": _l("Model")},
+        ".networking.fortios.accesspoints:*.serial_number": {"title": _l("Serial number")},
+        ".networking.fortios.accesspoints:*.version": {"title": _l("Version")},
+        ".networking.fortios.accesspoints:*.build": {"title": _l("Build")},
+        ".networking.fortios.accesspoints:*.end_of_support": {"title": _l("End of support")},
         ".networking.fortios.accesspoints.lldp:": {
-            "title": _("LLDP"),
+            "title": _l("LLDP"),
             "keyorder": ["switch_name", "switch_port", "switch_description", "local_port", "local_port_description"],
         },
         ".networking.fortios.accesspoints.lldp:*.local_port": {
-            "title": _("Local Port"),
+            "title": _l("Local Port"),
         },
         ".networking.fortios.accesspoints.lldp:*.local_port_description": {
-            "title": _("Local Port description"),
+            "title": _l("Local Port description"),
         },
         ".networking.fortios.accesspoints.lldp:*.switch_name": {
-            "title": _("Switch Name"),
+            "title": _l("Switch Name"),
         },
         ".networking.fortios.accesspoints.lldp:*.switch_port": {
-            "title": _("Switch Port"),
+            "title": _l("Switch Port"),
         },
         ".networking.fortios.accesspoints.lldp:*.switch_description": {
-            "title": _("Switch Description"),
+            "title": _l("Switch Description"),
         },
         ".networking.fortios.switches:": {
-            "title": _("Switches"),
-            "keyorder": ["name", "model", "serial", "version", "build"],
+            "title": _l("Switches"),
+            "keyorder": ["name", "model", "serial_number", "version", "build", "end_of_support"],
         },
         ".networking.fortios.switches:*.name": {
-            "title": _("Name"),
+            "title": _l("Name"),
         },
         ".networking.fortios.switches:*.model": {
-            "title": _("Model"),
+            "title": _l("Model"),
         },
-        ".networking.fortios.switches:*.serial": {
-            "title": _("Serial"),
+        ".networking.fortios.switches:*.serial_number": {
+            "title": _l("Serial number"),
         },
         ".networking.fortios.switches:*.version": {
-            "title": _("Version"),
+            "title": _l("Version"),
         },
         ".networking.fortios.switches:*.build": {
-            "title": _("Build"),
+            "title": _l("Build"),
+        },
+        ".networking.fortios.switches:*.end_of_support": {
+            "title": _l("End of support"),
         },
     }
 )

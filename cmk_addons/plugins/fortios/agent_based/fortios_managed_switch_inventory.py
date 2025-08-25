@@ -48,7 +48,7 @@ def inventory_fortios_managed_switch(section: Switch) -> InventoryResult:
     path = ["networking", "fortios", "switches"]
     for _k, v in section.items():
         model, version, build = model_version_build(v.os_version)
-        yield TableRow(path=path, key_columns={"name": v.name, "serial": v.serial, "model": model, "version": version, "build": build})
+        yield TableRow(path=path, key_columns={"name": v.name, "serial_number": v.serial, "model": model, "version": version, "build": build, "end_of_support": "False" if not v.eos else "True"})
 
 
 inventory_plugin_fortios_managed_switch = InventoryPlugin(
