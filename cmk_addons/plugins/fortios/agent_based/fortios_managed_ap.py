@@ -228,9 +228,10 @@ def check_fortios_managed_ap(item: str, section: Mapping[str, AccessPoint]) -> C
         memory_usage = ((ap.mem_total - ap.mem_free) / ap.mem_total) * 100
     except ZeroDivisionError:
         memory_usage = 0
-    yield Metric(name="fortigate_ap_memory_util", value=memory_usage, boundaries=(0, 100))
 
-    yield Metric("fortigate_ap_cpu_util", ap.cpu_usage, boundaries=(0, 100))
+    yield Metric("memory_util", value=memory_usage, boundaries=(0, 100))
+
+    yield Metric("util", ap.cpu_usage, boundaries=(0, 100))
 
     yield Metric(name="clients", value=ap.clients, boundaries=(0, None))
 
