@@ -99,7 +99,7 @@ DEFAULT_PARAMS: Dict = {
             IPSEC_SECTION,
             DEFAULT_PARAMS,
             [
-                Result(state=State.OK, summary="P1_TEST", details="Tunnels up: [P2_TEST: ['172.16.0.0-172.16.0.63']], \n\n                Tunnels down: [P2_TEST: ['0.0.0.0/0.0.0.0']], \n\n                Tunnels ignored by name: [], \n\n                Tunnels ignored by destination subnet: [], \n\n                "),
+                Result(state=State.CRIT, summary="Type: automatic", details="Tunnels up: [P2_TEST: ['172.16.0.0-172.16.0.63']], \n\n                Tunnels down: [P2_TEST: ['0.0.0.0/0.0.0.0']], \n\n                Tunnels ignored by name: [], \n\n                Tunnels ignored by destination subnet: [], \n\n                "),
                 Result(state=State.OK, summary="Total: 2.00"),
                 Metric("ipsec_total", 2.0),
                 Metric("total_tunnels", 2),
