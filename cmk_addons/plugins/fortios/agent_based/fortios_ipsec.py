@@ -166,7 +166,7 @@ def check_fortios_ipsec(item: str, params: Mapping[str, Any], section: Mapping[s
     if ipsec_tunnel.tunnels_up == ipsec_tunnel.tunnels_total:
         yield Result(state=State.OK, summary=ipsec_tunnel.summary, details=details)
 
-    elif (str(proxy_source.p2name) == (ipsec_tunnel.proxyid[0].p2name) for proxy_source in ignored_tunnels):
+    elif any(str(proxy_source.p2name) == (ipsec_tunnel.proxyid[0].p2name) for proxy_source in ignored_tunnels):
         yield Result(state=State.OK, summary=ipsec_tunnel.name, details=details)
     else:
         yield Result(state=State.CRIT, summary=ipsec_tunnel.summary, details=details)
