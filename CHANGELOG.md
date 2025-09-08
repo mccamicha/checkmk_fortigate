@@ -5,6 +5,43 @@
 > The format is based on [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ---
+## [2.0.0] - 2025-08-25
+This marks the first release with official support for CheckMK 2.4.x.
+### 🔄 Changed
+- 🛠️ **Breaking Changes**<br>
+This update introduces changes that are not compatible with existing configurations.<br>
+Important: All breaking changes will require a reconfiguration of your existing rules.<br>
+Make sure to document your current setup before updating the plugin, as previous configurations may no longer be supported or interpreted correctly after the update.
+  - Special agent configuration:
+    - SSL verification is now boolean
+    - API keys are now stored in encrypted form
+    - Specifying the IP address is no longer required
+  - Fortigate interfaces:
+    - new discovery rule:
+      - include or exclude interfaces from monitoring based on their description, name or alias
+  - Switch interfaces
+    - new discovery rule:
+      - include or exclude interfaces from monitoring based on their description
+      - option to discover only switchports with a description
+        - the rule to exclude interfaces by description still applies
+
+- All WATO rules have been migrated to use the new API, polished help text
+- Adjusted all pytests
+- Fortigate interfaces are only discovered if their state is "up"
+- Renamed parameter in DHCP scope usage levels rule to `FortiOS DHCP scope name`
+- NTP default paramters for stratum changed to 8 (`WARN`) and 12 (`CRIT`)
+- Forti AP check now uses built-in metrics for CPU and memory
+- Migrated all Pydantic models to Pydantic V2
+
+### 🚀 Added
+- The view under "Inventory → FortiOS devices"
+  - now supports searching by serial number
+  - contains an EOS column for FortiSwitches and FortiAPs
+
+### 🐛 Fixed
+- NTP check is more reliable
+- License check is more reliable
+- Various small improvements
 
 ## [1.2.0] - 2025-07-29
 
