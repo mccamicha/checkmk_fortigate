@@ -28,8 +28,11 @@ from cmk.agent_based.v2 import (
 )
 from cmk_addons.plugins.fortios.agent_based.fortios_ipsec import (
     FortiIPSec,
-    check_fortios_ipsec,
     parse_fortios_ipsec,
+)
+
+from cmk_addons.plugins.fortios.agent_based.fortios_ipsec_tunnel import (
+    check_fortios_ipsec,
 )
 
 IPSEC_SECTION: dict = {
@@ -99,7 +102,11 @@ DEFAULT_PARAMS: Dict = {
             IPSEC_SECTION,
             DEFAULT_PARAMS,
             [
-                Result(state=State.CRIT, summary="Type: automatic", details="Tunnels up: [P2_TEST: ['172.16.0.0-172.16.0.63']], \n\n                Tunnels down: [P2_TEST: ['0.0.0.0/0.0.0.0']], \n\n                Tunnels ignored by name: [], \n\n                Tunnels ignored by destination subnet: [], \n\n                "),
+                Result(
+                    state=State.CRIT,
+                    summary="Type: automatic",
+                    details="Tunnels up: [P2_TEST: ['172.16.0.0-172.16.0.63']], \n\n                Tunnels down: [P2_TEST: ['0.0.0.0/0.0.0.0']], \n\n                Tunnels ignored by name: [], \n\n                Tunnels ignored by destination subnet: [], \n\n                ",
+                ),
                 Result(state=State.OK, summary="Total: 2.00"),
                 Metric("ipsec_total", 2.0),
                 Metric("total_tunnels", 2),
@@ -110,9 +117,9 @@ DEFAULT_PARAMS: Dict = {
     ],
 )
 def test_check_fortios_ipsec(item: str, section: str, params: dict, expected_check_result: Tuple) -> None:
-    with patch("cmk_addons.plugins.fortios.agent_based.fortios_ipsec.get_value_store") as mock_get:
+    with patch("cmk_addons.plugins.fortios.agent_based.fortios_ipsec_tunnel.get_value_store") as mock_get:
         timestamp = int((datetime.now() - timedelta(minutes=2)).timestamp())
         mock_get.return_value = {"if_in_bps": (timestamp, 0.0), "if_out_bps": (timestamp, 0.0)}
         check_results = list(check_fortios_ipsec(item, params, section))
-        for result, expected in zip(check_results, expected_check_result):
+        for result, expected in zip(check_results, expected_check_result, strict=False):
             assert result == expected

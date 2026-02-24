@@ -5,6 +5,26 @@
 > The format is based on [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 
 ---
+## [2.0.1] - 2026-01-12
+### 🔄 Changed
+- License Check
+  - Treat `no_license` antivirus state as `OK` during inventory
+- HA Peer check refactored
+  - only one service will be created (run service discovery!)
+  - if no secondary information is found, state will become `WARN`
+- Readme updated
+
+### 🚀 Added
+- Switch port discovery
+ - add option to inventorize only interfaces with a matching description
+- New `IPSec Client VPN <name>` check. The service is inventoried only when users are connected. Its state is always reported as `OK` and displays the currently connected users.
+ - can be disabled &rarr; create discovery rule `FortiOS IPSec Client VPN discovery`
+
+### 🐛 Fixed
+- WiFi AP Check
+  - fix crash if WiFi AP has no IP address
+- Added dedicated rule for memory check (issue [#17](https://github.com/WagnerAG/checkmk_fortigate/issues/17))
+
 ## [2.0.0] - 2025-08-25
 This marks the first release with official support for CheckMK 2.4.x.
 ### 🔄 Changed
